@@ -62,7 +62,7 @@ proc createKings*(): seq[King] =
 proc createFreeTiles*(): seq[FreeTile] =
   for i in 2..5:
     for j in 0..7:
-      result.add(FreeTile(symbol: 'X', xPos: j, yPos: i))
+      result.add(FreeTile(symbol: ' ', xPos: j, yPos: i))
 
 proc createAllPieces*(): seq[Piece] =
   for pawn in createPawns():
