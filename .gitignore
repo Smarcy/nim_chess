@@ -6,3 +6,7 @@
 
 # Unignore all dirs
 !*/
+
+# ignore Session.vim
+
+src/Session.vim
