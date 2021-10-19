@@ -15,10 +15,14 @@ proc populateBoard*(): Board =
 method drawBoard*(board: Board) {.base.} =
   ## Draw the (populated) Chessboard
 
-  echo " +---+---+---+---+---+---+---+---+"
+  var sideNotation = 8
+  echo "  +---+---+---+---+---+---+---+---+"
   for row in board.board:
+    write(stdout, sideNotation, " ")
+    dec(sideNotation)
     for i in 0..7:
-      write(stdout, " | ", row[i].symbol)
-    write(stdout, " |")
+      write(stdout, "| ", row[i].symbol, " ")
+    write(stdout, "|")
     write(stdout, "\n")
-    echo " +---+---+---+---+---+---+---+---+"
+    echo "  +---+---+---+---+---+---+---+---+"
+  echo "    A   B   C   D   E   F   G   H  "
