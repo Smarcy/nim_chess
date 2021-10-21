@@ -13,7 +13,7 @@ while true:
   write(stdout, "\nType your move (ex.: A2 A3) -> ")
   var input = readLine(stdin).split(" ")
 
-  if isSemanticValidMove(input):
-    move(input, board)
+  if isValidMoveInput(input):
+    discard move(input, board)
   else:
     continue
