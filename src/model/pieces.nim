@@ -1,4 +1,5 @@
 import strutils
+from board import Board
 
 type
   Color* = enum
@@ -29,10 +30,11 @@ proc isSemanticValidMove*(move: seq[string]): bool =
       if len(m) != 2:
         return false
 
-      # Each Part consists of a letter followed by a digit (a-h and 1-9)
+      # Each Part consists of a letter followed by a digit (a-h and 1-8)
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
-proc move*(move: seq[string]) =
-  assert isSemanticValidMove(move)
+proc move*(move: seq[string], b: Board) =
+  return
+
 

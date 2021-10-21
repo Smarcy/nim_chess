@@ -14,8 +14,6 @@ while true:
   var input = readLine(stdin).split(" ")
 
   if isSemanticValidMove(input):
-    echo "VALID"
+    move(input, board)
   else:
-    echo "Invalid Move!"
-  discard readLine(stdin)
-
+    continue

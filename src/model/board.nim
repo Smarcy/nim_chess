@@ -2,7 +2,7 @@ import ../piece_factory
 import pieces
 
 type
-  Board = object of RootObj
+  Board* = object of RootObj
     board*: array[8, array[8, Piece]]
 
 let allPieces = piece_factory.createAllPieces()
