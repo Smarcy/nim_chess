@@ -12,7 +12,7 @@ proc populateBoard*(): Board =
   for piece in allPieces:
     result.board[piece.yPos][piece.xPos] = piece
 
-method drawBoard*(board: Board) {.base.} =
+method draw*(board: Board) {.base.} =
   ## Draw the (populated) Chessboard
 
   var sideNotation = 8
