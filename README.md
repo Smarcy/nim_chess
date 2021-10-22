@@ -1,6 +1,6 @@
 ### Board Layout
 
-![board](https://raw.githubusercontent.com/Smarcy/nim_chess/images/board_layout.png
+![board](https://github.com/Smarcy/nim_chess/blob/master/images/board_layout.png)
 )
 
 
