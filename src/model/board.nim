@@ -96,12 +96,10 @@ proc move*(input: seq[string], b: var Board) =
   let source = input[0]
   let target = input[1]
 
-  # Calc X Val: charVal of a..h - 97 = 0..7
-  # Calc Y Val: 8 - intVal(1..8)       = 0..7
-  let sourceX = int(source[0])-97
+  let sourceX = "abcdefgh".find($source[0])
   let sourceY = 8-(parseInt($source[1]))
 
-  let targetX = int(target[0])-97
+  let targetX = "abcdefgh".find($target[0])
   let targetY = 8-(parseInt($target[1]))
 
   let sourcePiece = b.board[sourceY][sourceX]
