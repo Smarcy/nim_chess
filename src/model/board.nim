@@ -69,28 +69,18 @@ proc isValidMovePattern(p: King): bool =
 proc isValidMove(piece: Piece,
                  source: tuple[x, y: int],
                  target: tuple[x, y: int]): bool =
-
-  case piece.symbol
-  of 'P':
-    if isValidMovePattern((Pawn)piece):
-      return true
-  of 'N':
-    if isValidMovePattern((Knight)piece):
-      return true
-  of 'B':
-    if isValidMovePattern((Bishop)piece):
-      return true
-  of 'R':
-    if isValidMovePattern((Rook)piece):
-      return true
-  of 'Q':
-    if isValidMovePattern((Queen)piece):
-      return true
-  of 'K':
-    if isValidMovePattern((King)piece):
-      return true
-  else:
-    return false
+  if piece of Pawn:
+    result = isValidMovePattern((Pawn)piece)
+  elif piece of Knight:
+    result = isValidMovePattern((Knight)piece)
+  elif piece of Bishop:
+    result = isValidMovePattern((Bishop)piece)
+  elif piece of Rook:
+    result = isValidMovePattern((Rook)piece)
+  elif piece of Queen:
+    result = isValidMovePattern((Queen)piece)
+  elif piece of King:
+    result = isValidMovePattern((King)piece)
 
 proc move*(input: seq[string], b: var Board) =
   let source = input[0]

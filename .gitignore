@@ -9,4 +9,4 @@
 
 # ignore Session.vim
 
-src/Session.vim
+Session.vim
