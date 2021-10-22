@@ -5,7 +5,7 @@ import os
 import model/pieces
 import model/board as b
 
-let board = b.populateBoard()
+var board = b.populateBoard()
 while true:
   discard os.execShellCmd("clear")
   b.draw(board)

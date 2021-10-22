@@ -42,11 +42,22 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
-proc move*(input: seq[string], b: Board): bool =
+proc move*(input: seq[string], b: var Board): bool =
+
   let source = input[0]
   let target = input[1]
 
-  echo source
-  echo target
+  let sourceX = int(source[0])-97
+  let sourceY = 8-(parseInt($source[1]))
+
+  let targetX = int(target[0])-97
+  let targetY = 8-(parseInt($target[1]))
+
+  b.board[targetY][targetX] = b.board[sourceY][sourceX]
+  b.board[sourceY][sourceX] = FreeTile(symbol: ' ', color: None, xPos: sourceX, yPos: sourceY)
+
+
+  # echo int(target[0])-97
+  # echo parseInt($target[1])-1
 
   return true
