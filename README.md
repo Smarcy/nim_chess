@@ -3,5 +3,5 @@
 </p>
 
 <p align="center">
-Idea shamelessly stolen from [rokem's 4dChess](https://github.com/rokemHB/4dChess/) <3
+Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem's 4dChess</a> <3
 </p>
