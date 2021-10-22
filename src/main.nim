@@ -14,9 +14,7 @@ while true:
   var input = readLine(stdin).split(" ")
 
   if isValidMoveInput(input):
-    assert move(input, board) # CHANGEME: Just to check if move was successful
-
-
+    move(input, board)
     discard readLine(stdin)
   else:
     continue
