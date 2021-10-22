@@ -1,3 +1,5 @@
+### Board layout
+
 <p align="center">
 <img src="https://github.com/Smarcy/nim_chess/blob/master/images/board_layout.png" />
 </p>
