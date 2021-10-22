@@ -1,8 +1,5 @@
-import strformat
 import strutils
-import sequtils
 import os
-import model/pieces
 import model/board as b
 
 var board = b.populateBoard()
