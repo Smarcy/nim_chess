@@ -20,5 +20,20 @@ type
 proc newPawn(symbol: char, color: Color, xPos, yPos: int): Pawn =
   Pawn(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
+proc newKnight*(symbol: char, color: Color, xPos, yPos: int): Knight =
+  Knight(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
+
+proc newBishop*(symbol: char, color: Color, xPos, yPos: int): Bishop =
+  Bishop(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
+
+proc newRook*(symbol: char, color: Color, xPos, yPos: int): Rook =
+  Rook(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
+
+proc newQueen*(symbol: char, color: Color, xPos, yPos: int): Queen =
+  Queen(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
+
+proc newKing*(symbol: char, color: Color, xPos, yPos: int): King =
+  King(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
+
 proc newFreeTile*(symbol: char, color: Color, xPos, yPos: int): FreeTile =
   FreeTile(symbol: symbol, color: color, xPos: xPos, yPos: yPos)

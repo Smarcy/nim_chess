@@ -42,6 +42,7 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
+# Overload isValidMovePattern for every Piece type
 proc isValidMovePattern(p: Pawn): bool =
   echo "Pawn"
   return true
@@ -86,6 +87,7 @@ proc move*(input: seq[string], b: var Board) =
   let source = input[0]
   let target = input[1]
 
+  # calc Y with 8 minus input because board and array are reversed
   let sourceX = "abcdefgh".find($source[0])
   let sourceY = 8-(parseInt($source[1]))
 
