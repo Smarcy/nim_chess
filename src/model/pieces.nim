@@ -1,8 +1,6 @@
-import strutils
-
 type
   Color* = enum
-    White, Black
+    White, Black, None
 
   Piece* = ref object of RootObj
     ## Base class of every piece on the board
@@ -18,4 +16,3 @@ type
   Queen* = ref object of Piece
   King* = ref object of Piece
   FreeTile* = ref object of Piece
-

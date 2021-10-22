@@ -43,4 +43,10 @@ proc isValidMoveInput*(move: seq[string]): bool =
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
 proc move*(input: seq[string], b: Board): bool =
-  return
+  let source = input[0]
+  let target = input[1]
+
+  echo source
+  echo target
+
+  return true
