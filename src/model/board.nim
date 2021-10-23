@@ -16,13 +16,22 @@ proc populateBoard*(): Board =
 method draw*(board: Board) {.base.} =
   ## Draw the (populated) Chessboard
 
+  # TODO: swap black and white lol
   var sideNotation = 8
   echo "  +---+---+---+---+---+---+---+---+"
   for row in board.board:
     write(stdout, sideNotation, " ")
     dec(sideNotation)
     for i in 0..7:
-      write(stdout, "| ", row[i].symbol, " ")
+      # echo repr(row[i])
+      if row[i] == nil:
+        continue
+      if row[i].color == White:
+        write(stdout, "| ", row[i].symbol, " ")
+      elif row[i].color == Black:
+        write(stdout, "| ", "\e[33m", row[i].symbol, "\e[m", " ")
+      elif row[i].color == None:
+        write(stdout, "| ", "\e[30m", row[i].symbol, "\e[m", " ")
     write(stdout, "|")
     write(stdout, "\n")
     echo "  +---+---+---+---+---+---+---+---+"
@@ -47,6 +56,9 @@ proc isValidMovePattern(source: tuple[x, y: int],
                         target: tuple[x, y: int],
                         p: Pawn): bool =
   # TODO: Definetely check if there is a enemy piece on the diagonal tile
+  # TODO: after color positions are corrected, swap yPos values with each other)
+  if (p.yPos == 1 and p.color == White) or (p.yPos == 1 and p.color == Black):
+    result = true
   if (target.y == source.y + 1) and (target.x + 1 == source.x - 1 or
       target.x + 1 == source.x + 1):
     result = true
