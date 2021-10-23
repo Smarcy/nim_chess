@@ -46,8 +46,14 @@ proc isValidMoveInput*(move: seq[string]): bool =
 proc isValidMovePattern(source: tuple[x, y: int],
                         target: tuple[x, y: int],
                         p: Pawn): bool =
-  echo "Pawn"
-  return true
+  if source.y == target.y + 2:
+    result = true
+  # TODO: Possibly check if there is a enemy piece on the diagonal tile
+  elif (target.y == source.y + 1) and (target.x + 1 == source.x - 1 or
+      target.x + 1 == source.x + 1):
+    result = true
+  else:
+    result = false
 
 proc isValidMovePattern(source: tuple[x, y: int],
                         target: tuple[x, y: int],
@@ -72,7 +78,7 @@ proc isValidMovePattern(source: tuple[x, y: int],
 
 proc isValidMovePattern(source: tuple[x, y: int],
                         target: tuple[x, y: int],
-                        p: King): bool =
+                        p: Queen): bool =
 
   echo "Queen"
   return true
@@ -88,17 +94,17 @@ proc isValidMove(piece: Piece,
                  source: tuple[x, y: int],
                  target: tuple[x, y: int]): bool =
   if piece of Pawn:
-    result = isValidMovePattern((Pawn)piece)
+    result = isValidMovePattern(source, target, (Pawn)piece)
   elif piece of Knight:
-    result = isValidMovePattern((Knight)piece)
+    result = isValidMovePattern(source, target, (Knight)piece)
   elif piece of Bishop:
-    result = isValidMovePattern((Bishop)piece)
+    result = isValidMovePattern(source, target, (Bishop)piece)
   elif piece of Rook:
-    result = isValidMovePattern((Rook)piece)
+    result = isValidMovePattern(source, target, (Rook)piece)
   elif piece of Queen:
-    result = isValidMovePattern((Queen)piece)
+    result = isValidMovePattern(source, target, (Queen)piece)
   elif piece of King:
-    result = isValidMovePattern((King)piece)
+    result = isValidMovePattern(source, target, (King)piece)
 
 proc move*(input: seq[string], b: var Board) =
   let source = input[0]
