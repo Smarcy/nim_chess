@@ -47,19 +47,13 @@ proc isValidMovePattern(source: tuple[x, y: int],
                         target: tuple[x, y: int],
                         p: Pawn): bool =
   # TODO: Definetely check if there is a enemy piece on the diagonal tile
-  echo "source", source
-  echo "t", target
   if (target.y == source.y + 1) and (target.x + 1 == source.x - 1 or
       target.x + 1 == source.x + 1):
-    echo "a"
     result = true
   elif ((source.y == (target.y + 2)) or (source.y == target.y + 1)) and
       source.x == target.x:
-
-    echo "b"
     result = true
   else:
-    echo "c"
     result = false
 
 proc isValidMovePattern(source: tuple[x, y: int],
