@@ -15,3 +15,4 @@ while true:
     discard readLine(stdin)
   else:
     continue
+

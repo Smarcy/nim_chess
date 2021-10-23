@@ -43,27 +43,44 @@ proc isValidMoveInput*(move: seq[string]): bool =
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
 # Overload isValidMovePattern for every Piece type
-proc isValidMovePattern(p: Pawn): bool =
+proc isValidMovePattern(source: tuple[x, y: int],
+                        target: tuple[x, y: int],
+                        p: Pawn): bool =
   echo "Pawn"
   return true
 
-proc isValidMovePattern(p: Knight): bool =
+proc isValidMovePattern(source: tuple[x, y: int],
+                        target: tuple[x, y: int],
+                        p: Knight): bool =
+
   echo "Knight"
   return true
 
-proc isValidMovePattern(p: Bishop): bool =
+proc isValidMovePattern(source: tuple[x, y: int],
+                        target: tuple[x, y: int],
+                        p: Bishop): bool =
+
   echo "Bishop"
   return true
 
-proc isValidMovePattern(p: Rook): bool =
+proc isValidMovePattern(source: tuple[x, y: int],
+                        target: tuple[x, y: int],
+                        p: Rook): bool =
+
   echo "Rook"
   return true
 
-proc isValidMovePattern(p: Queen): bool =
+proc isValidMovePattern(source: tuple[x, y: int],
+                        target: tuple[x, y: int],
+                        p: King): bool =
+
   echo "Queen"
   return true
 
-proc isValidMovePattern(p: King): bool =
+proc isValidMovePattern(source: tuple[x, y: int],
+                        target: tuple[x, y: int],
+                        p: King): bool =
+
   echo "King"
   return true
 
