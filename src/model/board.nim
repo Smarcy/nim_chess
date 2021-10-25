@@ -50,21 +50,36 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
+proc getPieceOnTile(x, y: int): Piece =
+  return
+
 # Overload isValidMovePattern for every Piece type
-proc isValidMovePattern(source: tuple[x, y: int],
+proc isValidMovePattern(b: Board, source: tuple[x, y: int],
                         target: tuple[x, y: int],
                         p: Pawn): bool =
-  # TODO: Definetely check if there is a enemy piece on the diagonal tile
-  if (p.yPos == 1 and p.color == White) or (p.yPos == 1 and p.color == Black):
-    result = true
-  if (target.y == source.y + 1) and (target.x + 1 == source.x - 1 or
-      target.x + 1 == source.x + 1):
-    result = true
-  elif ((source.y == (target.y + 2)) or (source.y == target.y + 1)) and
-      source.x == target.x:
-    result = true
+  case p.color
+  of White:
+    # TODO: encapsule "in-the-way" check?
+    if (target[1] == source[1] - 2) and (source[0] == target[0]):
+      if source[1] == 6 and b.board[source[1]-1][source[0]].color == None:
+      # If on initial Position, accept double step
+        return true
+    if source[1] == target[1] + 1 and b.board[source[1]-1][source[0]].color ==
+        None and source[0] == target[0]:
+      # Usual single step
+      return true
+    if (source[0]+1 == target[0] or source[0]-1 == target[0]) and (source[1] ==
+        target[1]+1):
+      return true
+    else:
+      # Illegal move
+      return false
+
+  of Black:
+    return
   else:
-    result = false
+    echo "Invalid"
+    return
 
 proc isValidMovePattern(source: tuple[x, y: int],
                         target: tuple[x, y: int],
@@ -101,11 +116,11 @@ proc isValidMovePattern(source: tuple[x, y: int],
   echo "King"
   return true
 
-proc isValidMove(piece: Piece,
+proc isValidMove(b: Board, piece: Piece,
                  source: tuple[x, y: int],
                  target: tuple[x, y: int]): bool =
   if piece of Pawn:
-    result = isValidMovePattern(source, target, (Pawn)piece)
+    result = isValidMovePattern(b, source, target, (Pawn)piece)
   elif piece of Knight:
     result = isValidMovePattern(source, target, (Knight)piece)
   elif piece of Bishop:
@@ -129,9 +144,25 @@ proc move*(input: seq[string], b: var Board) =
   let targetY = 8-(parseInt($target[1]))
 
   let sourcePiece = b.board[sourceY][sourceX]
+  let targetPiece = b.board[targetY][targetX]
 
   # Check if move input fits into piece-move-pattern
-  if isValidMove(sourcePiece, (sourceX, sourceY), (targetX, targetY)):
+  if isValidMove(b, sourcePiece, (sourceX, sourceY), (targetX, targetY)):
     # Replace source tile with a FreeTile
-    b.board[targetY][targetX] = b.board[sourceY][sourceX]
-    b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+    if sourcePiece.color != None:
+      if sourcePiece.color == targetPiece.color:
+        #If the targetPiece is a friendly Piece
+        return
+      elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
+        # If the targetPiece is an enemy Piece
+        b.board[targetY][targetX] = sourcePiece
+        b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+      else:
+        # If the targetPiece is a FreeTile
+        # TODO: Check for pieces on the way to the targetpiece
+        b.board[targetY][targetX] = sourcePiece
+        b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+    else:
+      # FreeTiles can't be moved
+      # TODO: When rounds are implemented, keep same player here
+      return
