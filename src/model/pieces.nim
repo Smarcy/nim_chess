@@ -17,7 +17,7 @@ type
   King* = ref object of Piece
   FreeTile* = ref object of Piece
 
-proc newPawn(symbol: char, color: Color, xPos, yPos: int): Pawn =
+proc newPawn*(symbol: char, color: Color, xPos, yPos: int): Pawn =
   Pawn(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
 proc newKnight*(symbol: char, color: Color, xPos, yPos: int): Knight =
