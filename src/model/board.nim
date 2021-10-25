@@ -1,6 +1,7 @@
 import strutils
 import ../piece_factory
 import pieces
+import std/terminal
 
 type
   Board* = object of RootObj
@@ -26,13 +27,12 @@ method draw*(board: Board) {.base.} =
       if row[i] == nil:
         continue
       if row[i].color == White:
-        write(stdout, "| ", "\e[92m", row[i].symbol, "\e[m", " ")
+        stdout.styledWrite("| ", fgRed, $row[i].symbol, fgDefault, " ")
       elif row[i].color == Black:
-        write(stdout, "| ", "\e[95m", row[i].symbol, "\e[m", " ")
+        stdout.styledWrite("| ", fgGreen, $row[i].symbol, fgDefault, " ")
       elif row[i].color == None:
-        write(stdout, "| ", row[i].symbol, " ")
-    write(stdout, "|")
-    write(stdout, "\n")
+        stdout.write("| " & row[i].symbol & " ")
+    write(stdout, "|", "\n")
     echo "  +---+---+---+---+---+---+---+---+"
   echo "    A   B   C   D   E   F   G   H  "
 
