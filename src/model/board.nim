@@ -53,53 +53,44 @@ proc getPieceOnTile(x, y: int): Piece =
 
 # Overload isValidMovePattern for every Piece type
 proc isValidMovePattern(b: Board, sourcePiece, targetPiece: Piece): bool =
+  ## Pawn Movement Ruleset
+
+  # Depending on color of sourcePiece
+  # x = 1/-1 positioning
+  # y = 1/6 initial pawn position
+  # z = needed(??) to calc forward tile
+  var x, y, z: int
+
   case sourcePiece.color
   of White:
-    # TODO: encapsule "in-the-way" check?
-    if (targetPiece.yPos == sourcePiece.yPos - 2) and (sourcePiece.xPos ==
-        targetPiece.xPos):
-      if sourcePiece.yPos == 6 and b.board[sourcePiece.yPos-1][
-          sourcePiece.xPos].color == None:
-      # If on initial Position and no piece in the way, accept double step
-        return true
-    if sourcePiece.yPos == targetPiece.yPos + 1 and b.board[sourcePiece.yPos-1][
-        sourcePiece.xPos].color == None and sourcePiece.xPos ==
-            targetPiece.xPos:
-      # Usual single step
-      return true
-    if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
-        targetPiece.yPos+1):
-      if b.board[targetPiece.yPos][targetPiece.xPos].color != None:
-        # Take
-        return true
-    else:
-      # Illegal move
-      return false
-
+    x = 1
+    y = 6
+    z = -1
   of Black:
-    if (targetPiece.yPos == sourcePiece.yPos + 2) and (sourcePiece.xPos ==
-        targetPiece.xPos):
-      if sourcePiece.yPos == 1 and b.board[sourcePiece.yPos+1][
-          sourcePiece.xPos].color == None:
-      # If on initial Position and no piece in the way, accept double step
-        return true
-    if sourcePiece.yPos == targetPiece.yPos - 1 and b.board[sourcePiece.yPos+1][
-        sourcePiece.xPos].color == None and sourcePiece.xPos ==
-            targetPiece.xPos:
-      # Usual single step
-      return true
-    if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
-        targetPiece.yPos-1):
-      if b.board[targetPiece.yPos][targetPiece.xPos].color != None:
-        # Take
-        return true
-    else:
-      # Illegal move
-      return false
-
+    x = -1
+    y = 1
+    z = 1
   else:
-    echo "Invalid"
-    return
+    return false
+
+  if (targetPiece.yPos == sourcePiece.yPos - (2*x)) and (sourcePiece.xPos ==
+      targetPiece.xPos):
+    if sourcePiece.yPos == y and b.board[sourcePiece.yPos-x][
+        sourcePiece.xPos].color == None:
+    # If on initial Position and no piece in the way, accept double step
+      return true
+  if sourcePiece.yPos == targetPiece.yPos + x and b.board[sourcePiece.yPos+z][
+      sourcePiece.xPos].color == None and sourcePiece.xPos == targetPiece.xPos:
+    # Usual single step
+    return true
+  if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
+      targetPiece.yPos+x):
+    if b.board[targetPiece.yPos][targetPiece.xPos].color != None:
+      # Take
+      return true
+  else:
+    # Illegal move
+    return false
 
 proc isValidMovePattern(sourcePiece: Knight, targetPiece: Piece): bool =
 
