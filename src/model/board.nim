@@ -16,14 +16,12 @@ proc populateBoard*(): Board =
 
 method draw*(board: Board) {.base.} =
   ## Draw the (populated) Chessboard
-
   var sideNotation = 8
   echo "  +---+---+---+---+---+---+---+---+"
   for row in board.board:
     write(stdout, sideNotation, " ")
     dec(sideNotation)
     for i in 0..7:
-      # echo repr(row[i])
       if row[i] == nil:
         continue
       if row[i].color == White:
@@ -57,19 +55,27 @@ proc getPieceOnTile(x, y: int): Piece =
 proc isValidMovePattern(b: Board, source: tuple[x, y: int],
                         target: tuple[x, y: int],
                         p: Pawn): bool =
+  let
+    target = newPiece(b.board[target.y][target.x].symbol,
+                      b.board[target.y][target.x].color,
+                      b.board[target.y][target.x].xPos,
+                      b.board[target.y][target.x].yPos)
+
+  echo repr(p)
+  echo repr(target)
   case p.color
   of White:
     # TODO: encapsule "in-the-way" check?
-    if (target[1] == source[1] - 2) and (source[0] == target[0]):
-      if source[1] == 6 and b.board[source[1]-1][source[0]].color == None:
+    if (target.yPos == p.yPos - 2) and (p.xPos == target.xPos):
+      if p.yPos == 6 and b.board[p.yPos-1][p.xPos].color == None:
       # If on initial Position, accept double step
         return true
-    if source[1] == target[1] + 1 and b.board[source[1]-1][source[0]].color ==
-        None and source[0] == target[0]:
+    if p.yPos == target.yPos + 1 and b.board[source[1]-1][p.xPos].color ==
+        None and p.xPos == target.xPos:
       # Usual single step
       return true
-    if (source[0]+1 == target[0] or source[0]-1 == target[0]) and (source[1] ==
-        target[1]+1):
+    if abs(target.xPos - p.xPos) == 1 and (p.yPos == target.yPos+1):
+      # Take
       return true
     else:
       # Illegal move
@@ -77,6 +83,7 @@ proc isValidMovePattern(b: Board, source: tuple[x, y: int],
 
   of Black:
     return
+
   else:
     echo "Invalid"
     return
@@ -143,7 +150,7 @@ proc move*(input: seq[string], b: var Board) =
   let targetX = "abcdefgh".find($target[0])
   let targetY = 8-(parseInt($target[1]))
 
-  let sourcePiece = b.board[sourceY][sourceX]
+  var sourcePiece = b.board[sourceY][sourceX]
   let targetPiece = b.board[targetY][targetX]
 
   # Check if move input fits into piece-move-pattern
@@ -154,14 +161,19 @@ proc move*(input: seq[string], b: var Board) =
         #If the targetPiece is a friendly Piece
         return
       elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
+        echo "a"
         # If the targetPiece is an enemy Piece
         b.board[targetY][targetX] = sourcePiece
         b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
       else:
+        echo "a"
         # If the targetPiece is a FreeTile
         # TODO: Check for pieces on the way to the targetpiece
         b.board[targetY][targetX] = sourcePiece
         b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+
+        sourcePiece.xPos = targetX
+        sourcePiece.yPos = targetY
     else:
       # FreeTiles can't be moved
       # TODO: When rounds are implemented, keep same player here
