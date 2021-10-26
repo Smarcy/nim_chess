@@ -60,29 +60,41 @@ proc isValidMovePattern(b: Board, source: tuple[x, y: int],
                       b.board[target.y][target.x].color,
                       b.board[target.y][target.x].xPos,
                       b.board[target.y][target.x].yPos)
-
-  echo repr(p)
-  echo repr(target)
   case p.color
   of White:
     # TODO: encapsule "in-the-way" check?
     if (target.yPos == p.yPos - 2) and (p.xPos == target.xPos):
       if p.yPos == 6 and b.board[p.yPos-1][p.xPos].color == None:
-      # If on initial Position, accept double step
+      # If on initial Position and no piece in the way, accept double step
         return true
     if p.yPos == target.yPos + 1 and b.board[source[1]-1][p.xPos].color ==
         None and p.xPos == target.xPos:
       # Usual single step
       return true
     if abs(target.xPos - p.xPos) == 1 and (p.yPos == target.yPos+1):
-      # Take
-      return true
+      if b.board[target.yPos][target.xPos].color != None:
+        # Take
+        return true
     else:
       # Illegal move
       return false
 
   of Black:
-    return
+    if (target.yPos == p.yPos + 2) and (p.xPos == target.xPos):
+      if p.yPos == 1 and b.board[p.yPos+1][p.xPos].color == None:
+      # If on initial Position and no piece in the way, accept double step
+        return true
+    if p.yPos == target.yPos - 1 and b.board[source[1]+1][p.xPos].color ==
+        None and p.xPos == target.xPos:
+      # Usual single step
+      return true
+    if abs(target.xPos - p.xPos) == 1 and (p.yPos == target.yPos-1):
+      if b.board[target.yPos][target.xPos].color != None:
+        # Take
+        return true
+    else:
+      # Illegal move
+      return false
 
   else:
     echo "Invalid"
@@ -161,14 +173,12 @@ proc move*(input: seq[string], b: var Board) =
         #If the targetPiece is a friendly Piece
         return
       elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
-        echo "a"
         # If the targetPiece is an enemy Piece
+        # TODO: Check for pieces in the way
         b.board[targetY][targetX] = sourcePiece
         b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
       else:
-        echo "a"
         # If the targetPiece is a FreeTile
-        # TODO: Check for pieces on the way to the targetpiece
         b.board[targetY][targetX] = sourcePiece
         b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
 
