@@ -52,27 +52,24 @@ proc getPieceOnTile(x, y: int): Piece =
   return
 
 # Overload isValidMovePattern for every Piece type
-proc isValidMovePattern(b: Board, source: tuple[x, y: int],
-                        target: tuple[x, y: int],
-                        p: Pawn): bool =
-  let
-    target = newPiece(b.board[target.y][target.x].symbol,
-                      b.board[target.y][target.x].color,
-                      b.board[target.y][target.x].xPos,
-                      b.board[target.y][target.x].yPos)
-  case p.color
+proc isValidMovePattern(b: Board, sourcePiece, targetPiece: Piece): bool =
+  case sourcePiece.color
   of White:
     # TODO: encapsule "in-the-way" check?
-    if (target.yPos == p.yPos - 2) and (p.xPos == target.xPos):
-      if p.yPos == 6 and b.board[p.yPos-1][p.xPos].color == None:
+    if (targetPiece.yPos == sourcePiece.yPos - 2) and (sourcePiece.xPos ==
+        targetPiece.xPos):
+      if sourcePiece.yPos == 6 and b.board[sourcePiece.yPos-1][
+          sourcePiece.xPos].color == None:
       # If on initial Position and no piece in the way, accept double step
         return true
-    if p.yPos == target.yPos + 1 and b.board[source[1]-1][p.xPos].color ==
-        None and p.xPos == target.xPos:
+    if sourcePiece.yPos == targetPiece.yPos + 1 and b.board[sourcePiece.yPos-1][
+        sourcePiece.xPos].color == None and sourcePiece.xPos ==
+            targetPiece.xPos:
       # Usual single step
       return true
-    if abs(target.xPos - p.xPos) == 1 and (p.yPos == target.yPos+1):
-      if b.board[target.yPos][target.xPos].color != None:
+    if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
+        targetPiece.yPos+1):
+      if b.board[targetPiece.yPos][targetPiece.xPos].color != None:
         # Take
         return true
     else:
@@ -80,16 +77,20 @@ proc isValidMovePattern(b: Board, source: tuple[x, y: int],
       return false
 
   of Black:
-    if (target.yPos == p.yPos + 2) and (p.xPos == target.xPos):
-      if p.yPos == 1 and b.board[p.yPos+1][p.xPos].color == None:
+    if (targetPiece.yPos == sourcePiece.yPos + 2) and (sourcePiece.xPos ==
+        targetPiece.xPos):
+      if sourcePiece.yPos == 1 and b.board[sourcePiece.yPos+1][
+          sourcePiece.xPos].color == None:
       # If on initial Position and no piece in the way, accept double step
         return true
-    if p.yPos == target.yPos - 1 and b.board[source[1]+1][p.xPos].color ==
-        None and p.xPos == target.xPos:
+    if sourcePiece.yPos == targetPiece.yPos - 1 and b.board[sourcePiece.yPos+1][
+        sourcePiece.xPos].color == None and sourcePiece.xPos ==
+            targetPiece.xPos:
       # Usual single step
       return true
-    if abs(target.xPos - p.xPos) == 1 and (p.yPos == target.yPos-1):
-      if b.board[target.yPos][target.xPos].color != None:
+    if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
+        targetPiece.yPos-1):
+      if b.board[targetPiece.yPos][targetPiece.xPos].color != None:
         # Take
         return true
     else:
@@ -100,56 +101,44 @@ proc isValidMovePattern(b: Board, source: tuple[x, y: int],
     echo "Invalid"
     return
 
-proc isValidMovePattern(source: tuple[x, y: int],
-                        target: tuple[x, y: int],
-                        p: Knight): bool =
+proc isValidMovePattern(sourcePiece: Knight, targetPiece: Piece): bool =
 
   echo "Knight"
   return true
 
-proc isValidMovePattern(source: tuple[x, y: int],
-                        target: tuple[x, y: int],
-                        p: Bishop): bool =
+proc isValidMovePattern(sourcePiece: Bishop, targetPiece: Piece): bool =
 
   echo "Bishop"
   return true
 
-proc isValidMovePattern(source: tuple[x, y: int],
-                        target: tuple[x, y: int],
-                        p: Rook): bool =
+proc isValidMovePattern(sourcePiece: Rook, targetPiece: Piece): bool =
 
   echo "Rook"
   return true
 
-proc isValidMovePattern(source: tuple[x, y: int],
-                        target: tuple[x, y: int],
-                        p: Queen): bool =
+proc isValidMovePattern(sourcePiece: Queen, targetPiece: Piece): bool =
 
   echo "Queen"
   return true
 
-proc isValidMovePattern(source: tuple[x, y: int],
-                        target: tuple[x, y: int],
-                        p: King): bool =
+proc isValidMovePattern(sourcePiece: King, targetPiece: Piece): bool =
 
   echo "King"
   return true
 
-proc isValidMove(b: Board, piece: Piece,
-                 source: tuple[x, y: int],
-                 target: tuple[x, y: int]): bool =
-  if piece of Pawn:
-    result = isValidMovePattern(b, source, target, (Pawn)piece)
-  elif piece of Knight:
-    result = isValidMovePattern(source, target, (Knight)piece)
-  elif piece of Bishop:
-    result = isValidMovePattern(source, target, (Bishop)piece)
-  elif piece of Rook:
-    result = isValidMovePattern(source, target, (Rook)piece)
-  elif piece of Queen:
-    result = isValidMovePattern(source, target, (Queen)piece)
-  elif piece of King:
-    result = isValidMovePattern(source, target, (King)piece)
+proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
+  if sourcePiece of Pawn:
+    result = isValidMovePattern(b, (Pawn)sourcePiece, targetPiece)
+  elif sourcePiece of Knight:
+    result = isValidMovePattern((Knight)sourcePiece, targetPiece)
+  elif sourcePiece of Bishop:
+    result = isValidMovePattern((Bishop)sourcePiece, targetPiece)
+  elif sourcePiece of Rook:
+    result = isValidMovePattern((Rook)sourcePiece, targetPiece)
+  elif sourcePiece of Queen:
+    result = isValidMovePattern((Queen)sourcePiece, targetPiece)
+  elif sourcePiece of King:
+    result = isValidMovePattern((King)sourcePiece, targetPiece)
 
 proc move*(input: seq[string], b: var Board) =
   let source = input[0]
@@ -166,7 +155,7 @@ proc move*(input: seq[string], b: var Board) =
   let targetPiece = b.board[targetY][targetX]
 
   # Check if move input fits into piece-move-pattern
-  if isValidMove(b, sourcePiece, (sourceX, sourceY), (targetX, targetY)):
+  if isValidMove(b, sourcePiece, targetPiece):
     # Replace source tile with a FreeTile
     if sourcePiece.color != None:
       if sourcePiece.color == targetPiece.color:
