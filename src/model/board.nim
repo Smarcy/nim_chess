@@ -48,11 +48,8 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
-proc getPieceOnTile(x, y: int): Piece =
-  return
-
 # Overload isValidMovePattern for every Piece type
-proc isValidMovePattern(b: Board, sourcePiece, targetPiece: Piece): bool =
+proc isValidMovePattern(b: Board, sourcePiece: Pawn, targetPiece: Piece): bool =
   ## Pawn Movement Ruleset
 
   # Depending on color of sourcePiece
@@ -87,27 +84,36 @@ proc isValidMovePattern(b: Board, sourcePiece, targetPiece: Piece): bool =
       # Take
       return true
 
-proc isValidMovePattern(sourcePiece: Knight, targetPiece: Piece): bool =
+proc isValidMovePattern(b: Board, sourcePiece: Knight,
+    targetPiece: Piece): bool =
+  ## Knight Movement Ruleset
 
-  echo "Knight"
-  return true
+  let offsets = @[(2, 1), (1, 2)]
 
-proc isValidMovePattern(sourcePiece: Bishop, targetPiece: Piece): bool =
+  let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
+  let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
+
+  if (yOffset, xOffset) in offsets:
+    return true
+
+proc isValidMovePattern(b: Board, sourcePiece: Bishop,
+    targetPiece: Piece): bool =
 
   echo "Bishop"
   return true
 
-proc isValidMovePattern(sourcePiece: Rook, targetPiece: Piece): bool =
+proc isValidMovePattern(b: Board, sourcePiece: Rook, targetPiece: Piece): bool =
 
   echo "Rook"
   return true
 
-proc isValidMovePattern(sourcePiece: Queen, targetPiece: Piece): bool =
+proc isValidMovePattern(b: Board, sourcePiece: Queen,
+    targetPiece: Piece): bool =
 
   echo "Queen"
   return true
 
-proc isValidMovePattern(sourcePiece: King, targetPiece: Piece): bool =
+proc isValidMovePattern(b: Board, sourcePiece: King, targetPiece: Piece): bool =
 
   echo "King"
   return true
@@ -116,15 +122,15 @@ proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
   if sourcePiece of Pawn:
     result = isValidMovePattern(b, (Pawn)sourcePiece, targetPiece)
   elif sourcePiece of Knight:
-    result = isValidMovePattern((Knight)sourcePiece, targetPiece)
+    result = isValidMovePattern(b, (Knight)sourcePiece, targetPiece)
   elif sourcePiece of Bishop:
-    result = isValidMovePattern((Bishop)sourcePiece, targetPiece)
+    result = isValidMovePattern(b, (Bishop)sourcePiece, targetPiece)
   elif sourcePiece of Rook:
-    result = isValidMovePattern((Rook)sourcePiece, targetPiece)
+    result = isValidMovePattern(b, (Rook)sourcePiece, targetPiece)
   elif sourcePiece of Queen:
-    result = isValidMovePattern((Queen)sourcePiece, targetPiece)
+    result = isValidMovePattern(b, (Queen)sourcePiece, targetPiece)
   elif sourcePiece of King:
-    result = isValidMovePattern((King)sourcePiece, targetPiece)
+    result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
 
 proc move*(input: seq[string], b: var Board) =
   let source = input[0]
@@ -152,6 +158,9 @@ proc move*(input: seq[string], b: var Board) =
         # TODO: Check for pieces in the way
         b.board[targetY][targetX] = sourcePiece
         b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+
+        sourcePiece.xPos = targetX
+        sourcePiece.yPos = targetY
       else:
         # If the targetPiece is a FreeTile
         b.board[targetY][targetX] = sourcePiece
