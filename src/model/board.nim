@@ -56,20 +56,17 @@ proc isValidMovePattern(b: Board, sourcePiece, targetPiece: Piece): bool =
   ## Pawn Movement Ruleset
 
   # Depending on color of sourcePiece
-  # x = 1/-1 positioning
-  # y = 1/6 initial pawn position
-  # z = needed(??) to calc forward tile
-  var x, y, z: int
+  # x = needed to calc steps (up/down)
+  # y = initial pawn position
+  var x, y: int
 
   case sourcePiece.color
   of White:
     x = 1
     y = 6
-    z = -1
   of Black:
     x = -1
     y = 1
-    z = 1
   else:
     return false
 
@@ -79,18 +76,16 @@ proc isValidMovePattern(b: Board, sourcePiece, targetPiece: Piece): bool =
         sourcePiece.xPos].color == None:
     # If on initial Position and no piece in the way, accept double step
       return true
-  if sourcePiece.yPos == targetPiece.yPos + x and b.board[sourcePiece.yPos+z][
-      sourcePiece.xPos].color == None and sourcePiece.xPos == targetPiece.xPos:
+  if sourcePiece.yPos == targetPiece.yPos + x and b.board[sourcePiece.yPos +
+          ((-1)*x)][sourcePiece.xPos].color == None and sourcePiece.xPos ==
+          targetPiece.xPos:
     # Usual single step
     return true
   if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
       targetPiece.yPos+x):
-    if b.board[targetPiece.yPos][targetPiece.xPos].color != None:
+    if sourcePiece.color != targetPiece.color:
       # Take
       return true
-  else:
-    # Illegal move
-    return false
 
 proc isValidMovePattern(sourcePiece: Knight, targetPiece: Piece): bool =
 
