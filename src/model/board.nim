@@ -98,8 +98,22 @@ proc isValidMovePattern(b: Board, sourcePiece: Knight,
 
 proc isValidMovePattern(b: Board, sourcePiece: Bishop,
     targetPiece: Piece): bool =
+  ## Bishop Movement Ruleset
 
-  echo "Bishop"
+  let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
+  let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
+
+  # Offsets absolutes have to be the same for diagonal movement pattern
+  if xOffset == yOffset:
+    let xDir = if sourcePiece.xPos > targetPiece.xPos: -1 else: 1
+    let yDir = if sourcePiece.yPos > targetPiece.yPos: -1 else: 1
+
+    # Check if anything is blocking the way. If yes -> don't move at all
+    for i in (sourcePiece.yPos + yDir) .. (targetPiece.yPos - yDir):
+      for j in (sourcePiece.xPos + xDir) .. (targetPiece.xPos - xDir):
+        if b.board[i][j].color != None:
+          return false
+
   return true
 
 proc isValidMovePattern(b: Board, sourcePiece: Rook, targetPiece: Piece): bool =
