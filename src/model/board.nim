@@ -122,7 +122,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook, targetPiece: Piece): bool =
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
 
   # Rook movement always has one offset that equals zero
-  if xOffset != 0 and yOffset != 0:
+  if xOffset != 0 and yOffset != 0 and sourcePiece.symbol != 'Q':
     return false
 
   var xDir = if sourcePiece.xPos > targetPiece.xPos: -1 else: 1
@@ -150,8 +150,9 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook, targetPiece: Piece): bool =
 proc isValidMovePattern(b: Board, sourcePiece: Queen,
     targetPiece: Piece): bool =
 
-  echo "Queen"
-  return true
+  # If given move is valid for rook AND bishop, it is valid for queen
+  return isValidMovePattern(b, cast[Bishop](sourcePiece), targetPiece) and
+      isValidMovePattern(b, cast[Rook](sourcePiece), targetPiece)
 
 proc isValidMovePattern(b: Board, sourcePiece: King, targetPiece: Piece): bool =
 
