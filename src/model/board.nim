@@ -109,16 +109,42 @@ proc isValidMovePattern(b: Board, sourcePiece: Bishop,
     let yDir = if sourcePiece.yPos > targetPiece.yPos: -1 else: 1
 
     # Check if anything is blocking the way. If yes -> don't move at all
-    for i in (sourcePiece.yPos + yDir) .. (targetPiece.yPos - yDir):
-      for j in (sourcePiece.xPos + xDir) .. (targetPiece.xPos - xDir):
-        if b.board[i][j].color != None:
+    for y in (sourcePiece.yPos + yDir) .. (targetPiece.yPos - yDir):
+      for x in (sourcePiece.xPos + xDir) .. (targetPiece.xPos - xDir):
+        if b.board[y][x].color != None:
           return false
-
   return true
 
 proc isValidMovePattern(b: Board, sourcePiece: Rook, targetPiece: Piece): bool =
+  ## Rook Movement Ruleset
 
-  echo "Rook"
+  let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
+  let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
+
+  # Rook movement always has one offset that equals zero
+  if xOffset != 0 and yOffset != 0:
+    return false
+
+  var xDir = if sourcePiece.xPos > targetPiece.xPos: -1 else: 1
+  var yDir = if sourcePiece.yPos > targetPiece.yPos: -1 else: 1
+
+  # Find out which offset is zero
+  if sourcePiece.xPos == targetPiece.xPos: xDir = 0
+  if sourcePiece.yPos == targetPiece.yPos: yDir = 0
+
+  if xDir == 0 and yDir == 1:
+    for i in sourcePiece.yPos+1 .. targetPiece.yPos-1:
+      if b.board[i][sourcePiece.xPos].color != None: return false
+  elif xDir == 0 and yDir == -1:
+    for i in targetPiece.yPos+1 .. sourcePiece.yPos-1:
+      if b.board[i][sourcePiece.xPos].color != None: return false
+  elif yDir == 0 and xDir == 1:
+    for i in sourcePiece.xPos+1 .. targetPiece.xPos-1:
+      if b.board[sourcePiece.yPos][i].color != None: return false
+  elif yDir == 0 and xDir == -1:
+    for i in targetPiece.xPos+1 .. sourcePiece.xPos-1:
+      if b.board[sourcePiece.yPos][i].color != None: return false
+
   return true
 
 proc isValidMovePattern(b: Board, sourcePiece: Queen,
