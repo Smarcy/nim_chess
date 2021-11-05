@@ -16,4 +16,4 @@ Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem
 * [ ] checkmate
 * [ ] en passant
 * [ ] castling
-* [ ] unde/redo mechanic
+* [ ] undo/redo mechanic

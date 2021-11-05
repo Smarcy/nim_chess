@@ -14,7 +14,7 @@ proc populateBoard*(): Board =
   for piece in allPieces:
     result.board[piece.yPos][piece.xPos] = piece
 
-method draw*(board: Board) {.base.} =
+proc draw*(board: Board) =
   ## Draw the (populated) Chessboard
   var sideNotation = 8
   echo "  +---+---+---+---+---+---+---+---+"
@@ -155,8 +155,16 @@ proc isValidMovePattern(b: Board, sourcePiece: Queen,
       isValidMovePattern(b, cast[Rook](sourcePiece), targetPiece)
 
 proc isValidMovePattern(b: Board, sourcePiece: King, targetPiece: Piece): bool =
+  ## King Movement Ruleset
 
-  echo "King"
+  let validOffsets = @[(1, 0), (0, 1), (1, 1)]
+  let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
+  let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
+
+  # In this case it is suffictient to test for the offsets,
+  # since there are no "in-between" tiles with king movement
+  if (yOffset, xOffset) notin validOffsets:
+    return false
   return true
 
 proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
