@@ -1,9 +1,19 @@
-### Board layout
+<div align="center">
+<h2>Board layout</h2>
 
-<p align="center">
 <img src="https://github.com/Smarcy/nim_chess/blob/master/images/board_layout.png" />
-</p>
 
-<p align="center">
 Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem's 4dChess</a> <3
-</p>
+</div>
+
+----
+
+### TODO
+
+* [ ] pawn promotion
+* [ ] alternating player moves
+* [ ] check
+* [ ] checkmate
+* [ ] en passant
+* [ ] castling
+* [ ] unde/redo mechanic
