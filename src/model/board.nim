@@ -25,9 +25,9 @@ proc draw*(board: Board) =
       if row[i] == nil:
         continue
       if row[i].color == White:
-        stdout.styledWrite("| ", fgRed, $row[i].symbol, fgDefault, " ")
-      elif row[i].color == Black:
         stdout.styledWrite("| ", fgGreen, $row[i].symbol, fgDefault, " ")
+      elif row[i].color == Black:
+        stdout.styledWrite("| ", fgRed, $row[i].symbol, fgDefault, " ")
       elif row[i].color == None:
         stdout.write("| " & row[i].symbol & " ")
     write(stdout, "|", "\n")
@@ -163,9 +163,8 @@ proc isValidMovePattern(b: Board, sourcePiece: King, targetPiece: Piece): bool =
 
   # In this case it is suffictient to test for the offsets,
   # since there are no "in-between" tiles with king movement
-  if (yOffset, xOffset) notin validOffsets:
-    return false
-  return true
+  if (yOffset, xOffset) in validOffsets:
+    return true
 
 proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
   if sourcePiece of Pawn:
@@ -181,11 +180,20 @@ proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
   elif sourcePiece of King:
     result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
 
-proc move*(input: seq[string], b: var Board) =
+#TODO: Maybe return a boolean
+#  - true for succesful move -> next player
+#  - false for faulty move -> same player again
+proc move*(input: seq[string], b: var Board): bool =
   let source = input[0]
   let target = input[1]
 
-  # calc Y with 8 minus input because board and array are reversed
+  # sanity checks
+  if source[0] notin "abcdefgh" or source[1] notin '1'..'8':
+    return false
+  if target[0] notin "abcdefgh" or target[1] notin '1'..'8':
+    return false
+
+  # calc Y with (8 minus input) because drawn-board and array are reversed
   let sourceX = "abcdefgh".find($source[0])
   let sourceY = 8-(parseInt($source[1]))
 
@@ -201,15 +209,15 @@ proc move*(input: seq[string], b: var Board) =
     if sourcePiece.color != None:
       if sourcePiece.color == targetPiece.color:
         #If the targetPiece is a friendly Piece
-        return
+        return false
       elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
         # If the targetPiece is an enemy Piece
-        # TODO: Check for pieces in the way
         b.board[targetY][targetX] = sourcePiece
         b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
 
         sourcePiece.xPos = targetX
         sourcePiece.yPos = targetY
+        return true
       else:
         # If the targetPiece is a FreeTile
         b.board[targetY][targetX] = sourcePiece
@@ -217,7 +225,8 @@ proc move*(input: seq[string], b: var Board) =
 
         sourcePiece.xPos = targetX
         sourcePiece.yPos = targetY
+        return true
     else:
       # FreeTiles can't be moved
       # TODO: When rounds are implemented, keep same player here
-      return
+      return false

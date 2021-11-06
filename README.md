@@ -10,6 +10,7 @@ Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem
 
 ### TODO
 
+* [X] basic movement rules
 * [ ] pawn promotion
 * [ ] alternating player moves
 * [ ] check

@@ -11,7 +11,12 @@ while true:
   var input = readLine(stdin).split(" ")
 
   if isValidMoveInput(input):
-    move(input, board)
+    if move(input, board):
+      # TODO: Next player moves
+      echo "SUCCESS"
+    else:
+      # TODO: Same player moves again
+      echo "ERROR"
     discard readLine(stdin)
   else:
     continue
