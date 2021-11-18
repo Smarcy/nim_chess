@@ -80,21 +80,20 @@ proc isValidMovePattern(b: Board, sourcePiece: Pawn, targetPiece: Piece): bool =
     return true
   if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
       targetPiece.yPos+x):
-    if sourcePiece.color != targetPiece.color:
-      # Take
+    if sourcePiece.color != targetPiece.color and targetPiece.color != None:
+      # Take if diagonal tile has an enemy on it
       return true
 
 proc isValidMovePattern(b: Board, sourcePiece: Knight,
     targetPiece: Piece): bool =
   ## Knight Movement Ruleset
 
-  let offsets = @[(2, 1), (1, 2)]
+  let validOffsets = @[(2, 1), (1, 2)]
 
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
 
-  if (yOffset, xOffset) in offsets:
-    return true
+  return (yOffset, xOffset) in validOffsets
 
 proc isValidMovePattern(b: Board, sourcePiece: Bishop,
     targetPiece: Piece): bool =
@@ -161,10 +160,9 @@ proc isValidMovePattern(b: Board, sourcePiece: King, targetPiece: Piece): bool =
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
 
-  # In this case it is suffictient to test for the offsets,
+  # In this case it is sufficient to test for the offsets,
   # since there are no "in-between" tiles with king movement
-  if (yOffset, xOffset) in validOffsets:
-    return true
+  return (yOffset, xOffset) in validOffsets
 
 proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
   if sourcePiece of Pawn:
@@ -210,14 +208,15 @@ proc move*(input: seq[string], b: var Board): bool =
       if sourcePiece.color == targetPiece.color:
         #If the targetPiece is a friendly Piece
         return false
-      elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
-        # If the targetPiece is an enemy Piece
-        b.board[targetY][targetX] = sourcePiece
-        b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+      # TODO: Guess this can be deleted??
+      # elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
+      #   # If the targetPiece is an enemy Piece
+      #   b.board[targetY][targetX] = sourcePiece
+      #   b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
 
-        sourcePiece.xPos = targetX
-        sourcePiece.yPos = targetY
-        return true
+      #   sourcePiece.xPos = targetX
+      #   sourcePiece.yPos = targetY
+      #   return true
       else:
         # If the targetPiece is a FreeTile
         b.board[targetY][targetX] = sourcePiece
@@ -228,5 +227,4 @@ proc move*(input: seq[string], b: var Board): bool =
         return true
     else:
       # FreeTiles can't be moved
-      # TODO: When rounds are implemented, keep same player here
       return false
