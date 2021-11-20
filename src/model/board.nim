@@ -48,7 +48,7 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
-proc pawnCanPromote(p: Pawn): bool =
+proc canPawnPromote(p: Pawn): bool =
   # This method is called if a pawn does a successful move forward
   case p.color
   # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
@@ -221,7 +221,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
         return false
       else:
         # If moved Piece is a Pawn and on the rim after its move, promote (auto queen atm - TODO)
-        if sourcePiece of Pawn and pawnCanPromote((Pawn)sourcePiece):
+        if sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
           b.board[targetY][targetX] = newQueen('Q', sourcePiece.color,
               sourcePiece.xPos, sourcePiece.yPos)
           b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)

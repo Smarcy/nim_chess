@@ -10,6 +10,8 @@ while true:
   discard os.execShellCmd("clear")
   b.draw(board)
 
+  echo "\n", currentPlayer, "'s turn"
+
   write(stdout, "\nType your move (ex.: A2 A3) -> ")
   var input = readLine(stdin).split(" ")
 
