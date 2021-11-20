@@ -48,6 +48,17 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
+proc pawnCanPromote(p: Pawn): bool =
+  # This method is called if a pawn does a successful move forward
+  case p.color
+  # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
+  of Black:
+    if p.yPos == 6: return true
+  of White:
+    if p.yPos == 1: return true
+  else:
+    return false
+
 # Overload isValidMovePattern for every Piece type
 proc isValidMovePattern(b: Board, sourcePiece: Pawn, targetPiece: Piece): bool =
   ## Pawn Movement Ruleset
@@ -178,9 +189,6 @@ proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
   elif sourcePiece of King:
     result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
 
-#TODO: Maybe return a boolean
-#  - true for succesful move -> next player
-#  - false for faulty move -> same player again
 proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   let source = input[0]
   let target = input[1]
@@ -211,23 +219,21 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
       if sourcePiece.color == targetPiece.color:
         #If the targetPiece is a friendly Piece
         return false
-      # TODO: Guess this can be deleted??
-      # elif sourcePiece.color != targetPiece.color and targetPiece.color != None:
-      #   # If the targetPiece is an enemy Piece
-      #   b.board[targetY][targetX] = sourcePiece
-      #   b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
-
-      #   sourcePiece.xPos = targetX
-      #   sourcePiece.yPos = targetY
-      #   return true
       else:
-        # If the targetPiece is a FreeTile
-        b.board[targetY][targetX] = sourcePiece
-        b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+        # If moved Piece is a Pawn and on the rim after its move, promote (auto queen atm - TODO)
+        if sourcePiece of Pawn and pawnCanPromote((Pawn)sourcePiece):
+          b.board[targetY][targetX] = newQueen('Q', sourcePiece.color,
+              sourcePiece.xPos, sourcePiece.yPos)
+          b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+          return true
+        else:
+          # If the targetPiece is a FreeTile
+          b.board[targetY][targetX] = sourcePiece
+          b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
 
-        sourcePiece.xPos = targetX
-        sourcePiece.yPos = targetY
-        return true
+          sourcePiece.xPos = targetX
+          sourcePiece.yPos = targetY
+          return true
     else:
       # FreeTiles can't be moved
       return false

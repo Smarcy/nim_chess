@@ -11,8 +11,9 @@ Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem
 ### TODO
 
 * [X] basic movement rules
-* [ ] pawn promotion
-* [ ] alternating player moves
+* [X] pawn promotion
+    * [ ] let player choose piece after promotion (auto queen atm)
+* [X] alternating player moves
 * [ ] check
 * [ ] checkmate
 * [ ] en passant
