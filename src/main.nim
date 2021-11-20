@@ -14,13 +14,9 @@ while true:
   var input = readLine(stdin).split(" ")
 
   if isValidMoveInput(input):
-    if move(input, board):
-      # TODO: Next player moves
-      echo "SUCCESS"
+    if move(input, board, currentPlayer):
+      # Change currentPlayerColor if the given move was successful
+      if currentPlayer == White: currentPlayer = Black else: currentPlayer = White
     else:
-      # TODO: Same player moves again
-      echo "ERROR"
-    discard readLine(stdin)
-  else:
-    continue
-
+      echo "Illegal Move!"
+      discard readLine(stdin)

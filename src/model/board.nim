@@ -181,7 +181,7 @@ proc isValidMove(b: Board, sourcePiece, targetPiece: Piece): bool =
 #TODO: Maybe return a boolean
 #  - true for succesful move -> next player
 #  - false for faulty move -> same player again
-proc move*(input: seq[string], b: var Board): bool =
+proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   let source = input[0]
   let target = input[1]
 
@@ -200,6 +200,9 @@ proc move*(input: seq[string], b: var Board): bool =
 
   var sourcePiece = b.board[sourceY][sourceX]
   let targetPiece = b.board[targetY][targetX]
+
+  # Check if the move is viable for the current player(color)
+  if sourcePiece.color != currPlayer: return false
 
   # Check if move input fits into piece-move-pattern
   if isValidMove(b, sourcePiece, targetPiece):
