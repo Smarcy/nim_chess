@@ -12,7 +12,7 @@ Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem
 
 * [X] basic movement rules
 * [X] pawn promotion
-    * [ ] let player choose piece after promotion (auto queen atm)
+    * [X] let player choose piece after promotion (auto queen atm)
 * [X] alternating player moves
 * [ ] check
 * [ ] checkmate

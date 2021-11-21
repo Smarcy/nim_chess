@@ -222,8 +222,29 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
       else:
         # If moved Piece is a Pawn and on the rim after its move, promote (auto queen atm - TODO)
         if sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
-          b.board[targetY][targetX] = newQueen('Q', sourcePiece.color,
-              sourcePiece.xPos, sourcePiece.yPos)
+
+          while(true):
+            write(stdout, "\nType the symbol you'd like to promote to -> ")
+            case readLine(stdin)
+            of "Q":
+              b.board[targetY][targetX] = newQueen('Q', sourcePiece.color,
+                  sourcePiece.xPos, sourcePiece.yPos)
+              break
+            of "R":
+              b.board[targetY][targetX] = newRook('R', sourcePiece.color,
+                  sourcePiece.xPos, sourcePiece.yPos)
+              break
+            of "N":
+              b.board[targetY][targetX] = newKnight('N', sourcePiece.color,
+                  sourcePiece.xPos, sourcePiece.yPos)
+              break
+            of "B":
+              b.board[targetY][targetX] = newBishop('B', sourcePiece.color,
+                  sourcePiece.xPos, sourcePiece.yPos)
+              break
+            else:
+              continue
+
           b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
           return true
         else:
