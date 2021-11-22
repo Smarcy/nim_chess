@@ -87,7 +87,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   if sourcePiece.color != currPlayer: return false
 
   # Check if move input fits into piece-move-pattern
-  if isValidMove(b, sourcePiece, targetPiece):
+  if movement.isValidMove(b, sourcePiece, targetPiece):
     # Replace source tile with a FreeTile
     if sourcePiece.color != None:
       if sourcePiece.color == targetPiece.color:
