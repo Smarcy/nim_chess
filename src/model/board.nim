@@ -90,30 +90,30 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
             write(stdout, "\nType the symbol you'd like to promote to (Q, R, N, B) -> ")
             case readLine(stdin).toUpperAscii
             of "Q":
-              b.board[targetY][targetX] = newQueen('Q', sourcePiece.color,
+              b.board[targetY][targetX] = newQueen(sourcePiece.color,
                   sourcePiece.xPos, sourcePiece.yPos)
               break
             of "R":
-              b.board[targetY][targetX] = newRook('R', sourcePiece.color,
+              b.board[targetY][targetX] = newRook(sourcePiece.color,
                   sourcePiece.xPos, sourcePiece.yPos)
               break
             of "N":
-              b.board[targetY][targetX] = newKnight('N', sourcePiece.color,
+              b.board[targetY][targetX] = newKnight(sourcePiece.color,
                   sourcePiece.xPos, sourcePiece.yPos)
               break
             of "B":
-              b.board[targetY][targetX] = newBishop('B', sourcePiece.color,
+              b.board[targetY][targetX] = newBishop(sourcePiece.color,
                   sourcePiece.xPos, sourcePiece.yPos)
               break
             else:
               continue
 
-          b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+          b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
           return true
         else:
           # If the targetPiece is a FreeTile
           b.board[targetY][targetX] = sourcePiece
-          b.board[sourceY][sourceX] = newFreeTile(' ', None, sourceX, sourceY)
+          b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
 
           sourcePiece.xPos = targetX
           sourcePiece.yPos = targetY

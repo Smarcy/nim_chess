@@ -17,26 +17,26 @@ type
   King* = ref object of Piece
   FreeTile* = ref object of Piece
 
-proc newPiece*(symbol: char, color: Color, xPos, yPos: int): Piece =
+proc newPiece*(color: Color, xPos, yPos: int, symbol: char = 'X'): Piece =
   Piece(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newPawn*(symbol: char, color: Color, xPos, yPos: int): Pawn =
+proc newPawn*(color: Color, xPos, yPos: int, symbol: char = 'P'): Pawn =
   Pawn(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newKnight*(symbol: char, color: Color, xPos, yPos: int): Knight =
+proc newKnight*(color: Color, xPos, yPos: int, symbol: char = 'N'): Knight =
   Knight(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newBishop*(symbol: char, color: Color, xPos, yPos: int): Bishop =
+proc newBishop*(color: Color, xPos, yPos: int, symbol: char = 'B'): Bishop =
   Bishop(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newRook*(symbol: char, color: Color, xPos, yPos: int): Rook =
+proc newRook*(color: Color, xPos, yPos: int, symbol: char = 'R'): Rook =
   Rook(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newQueen*(symbol: char, color: Color, xPos, yPos: int): Queen =
+proc newQueen*(color: Color, xPos, yPos: int, symbol: char = 'Q'): Queen =
   Queen(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newKing*(symbol: char, color: Color, xPos, yPos: int): King =
+proc newKing*(color: Color, xPos, yPos: int, symbol: char = 'K'): King =
   King(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
-proc newFreeTile*(symbol: char, color: Color, xPos, yPos: int): FreeTile =
+proc newFreeTile*(color: Color, xPos, yPos: int, symbol: char = ' '): FreeTile =
   FreeTile(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
