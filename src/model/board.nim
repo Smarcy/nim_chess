@@ -2,12 +2,14 @@ import strutils
 import ../piece_factory
 import pieces
 import std/terminal
-from ../movement import isValidMovePattern
 
 
 type
   Board* = object of RootObj
     board*: array[8, array[8, Piece]]
+
+# Import has to be after Board definition, no clue why - otheriwse cyclic dep.
+from ../movement import isValidMove
 
 let allPieces = piece_factory.createAllPieces()
 
@@ -61,8 +63,6 @@ proc canPawnPromote(p: Pawn): bool =
   else:
     return false
 
-# Overload isValidMovePattern for every Piece type
-
 proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   let source = input[0]
   let target = input[1]
@@ -94,7 +94,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
         #If the targetPiece is a friendly Piece
         return false
       else:
-        # If moved Piece is a Pawn and on the rim after its move, promote (auto queen atm - TODO)
+        # If moved Piece is a Pawn and on the rim after its move -> promote it
         if sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
 
           while(true):

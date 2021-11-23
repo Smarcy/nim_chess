@@ -1,7 +1,9 @@
 import model/pieces
 from model/board import Board
 
-proc isValidMovePattern*(b: Board, sourcePiece: Pawn,
+# Overload isValidMovePattern for every Piece type
+
+proc isValidMovePattern(b: Board, sourcePiece: Pawn,
     targetPiece: Piece): bool =
   ## Pawn Movement Ruleset
 
@@ -37,7 +39,7 @@ proc isValidMovePattern*(b: Board, sourcePiece: Pawn,
       # Take if diagonal tile has an enemy on it
       return true
 
-proc isValidMovePattern*(b: Board, sourcePiece: Knight,
+proc isValidMovePattern(b: Board, sourcePiece: Knight,
     targetPiece: Piece): bool =
   ## Knight Movement Ruleset
 
@@ -48,7 +50,7 @@ proc isValidMovePattern*(b: Board, sourcePiece: Knight,
 
   return (yOffset, xOffset) in validOffsets
 
-proc isValidMovePattern*(b: Board, sourcePiece: Bishop,
+proc isValidMovePattern(b: Board, sourcePiece: Bishop,
     targetPiece: Piece): bool =
   ## Bishop Movement Ruleset
 
@@ -67,7 +69,7 @@ proc isValidMovePattern*(b: Board, sourcePiece: Bishop,
           return false
     return true
 
-proc isValidMovePattern*(b: Board, sourcePiece: Rook,
+proc isValidMovePattern(b: Board, sourcePiece: Rook,
     targetPiece: Piece): bool =
   ## Rook Movement Ruleset
 
@@ -100,14 +102,14 @@ proc isValidMovePattern*(b: Board, sourcePiece: Rook,
 
   return true
 
-proc isValidMovePattern*(b: Board, sourcePiece: Queen,
+proc isValidMovePattern(b: Board, sourcePiece: Queen,
     targetPiece: Piece): bool =
 
   # If given move is valid for rook OR bishop, it is valid for queen
   return isValidMovePattern(b, cast[Bishop](sourcePiece), targetPiece) or
       isValidMovePattern(b, cast[Rook](sourcePiece), targetPiece)
 
-proc isValidMovePattern*(b: Board, sourcePiece: King,
+proc isValidMovePattern(b: Board, sourcePiece: King,
     targetPiece: Piece): bool =
   ## King Movement Ruleset
 
