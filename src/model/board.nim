@@ -9,7 +9,7 @@ type
     board*: array[8, array[8, Piece]]
 
 # Import has to be after Board definition, no clue why - otheriwse cyclic dep.
-from ../movement import isValidMove
+from ../rules import isValidMove, canPawnPromote
 
 let allPieces = piece_factory.createAllPieces()
 
@@ -52,17 +52,6 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
-proc canPawnPromote(p: Pawn): bool =
-  # This method is called if a pawn does a successful move forward
-  case p.color
-  # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
-  of Black:
-    if p.yPos == 6: return true
-  of White:
-    if p.yPos == 1: return true
-  else:
-    return false
-
 proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   let source = input[0]
   let target = input[1]
@@ -87,7 +76,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   if sourcePiece.color != currPlayer: return false
 
   # Check if move input fits into piece-move-pattern
-  if movement.isValidMove(b, sourcePiece, targetPiece):
+  if rules.isValidMove(b, sourcePiece, targetPiece):
     # Replace source tile with a FreeTile
     if sourcePiece.color != None:
       if sourcePiece.color == targetPiece.color:
@@ -95,7 +84,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
         return false
       else:
         # If moved Piece is a Pawn and on the rim after its move -> promote it
-        if sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
+        if sourcePiece of Pawn and rules.canPawnPromote((Pawn)sourcePiece):
 
           while(true):
             write(stdout, "\nType the symbol you'd like to promote to (Q, R, N, B) -> ")

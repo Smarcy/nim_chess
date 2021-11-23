@@ -134,3 +134,15 @@ proc isValidMove*(b: Board, sourcePiece, targetPiece: Piece): bool =
     result = isValidMovePattern(b, (Queen)sourcePiece, targetPiece)
   elif sourcePiece of King:
     result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
+
+proc canPawnPromote*(p: Pawn): bool =
+  # This method is called if a pawn does a successful move forward
+  case p.color
+  # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
+  of Black:
+    if p.yPos == 6: return true
+  of White:
+    if p.yPos == 1: return true
+  else:
+    return false
+
