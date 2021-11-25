@@ -95,7 +95,11 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
         let newPiece = promotePawn(b, sourcePiece, targetX, targetY)
 
         b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
-        b.board[targetY][targetY] = newPiece
+        b.board[targetY][targetX] = newPiece
         return true
-      return true
+      else:
+        b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
+        b.board[targetY][targetX] = sourcePiece
+        return true
+
 

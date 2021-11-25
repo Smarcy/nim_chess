@@ -27,6 +27,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Pawn,
     if sourcePiece.yPos == y and b.board[sourcePiece.yPos-x][
         sourcePiece.xPos].color == None:
     # If on initial Position and no piece in the way, accept double step
+
       return true
   if sourcePiece.yPos == targetPiece.yPos + x and b.board[sourcePiece.yPos +
           ((-1)*x)][sourcePiece.xPos].color == None and sourcePiece.xPos ==
