@@ -36,7 +36,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Pawn,
   if abs(targetPiece.xPos - sourcePiece.xPos) == 1 and (sourcePiece.yPos ==
       targetPiece.yPos+x):
     if sourcePiece.color != targetPiece.color and targetPiece.color != None:
-      # Take if diagonal tile has an enemy on it
+    # Take if diagonal tile has an enemy on it
       return true
 
 proc isValidMovePattern(b: Board, sourcePiece: Knight,
@@ -100,6 +100,9 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
     for i in targetPiece.xPos+1 .. sourcePiece.xPos-1:
       if b.board[sourcePiece.yPos][i].color != None: return false
 
+  #After any (first) successful rook move, lose right to castle on that rook
+  sourcePiece.canCastle = false
+
   return true
 
 proc isValidMovePattern(b: Board, sourcePiece: Queen,
@@ -116,6 +119,9 @@ proc isValidMovePattern(b: Board, sourcePiece: King,
   let validOffsets = @[(1, 0), (0, 1), (1, 1)]
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
+
+  # Lose righ to castle after any (first) successful king move
+  sourcePiece.canCastle = false
 
   # In this case it is sufficient to test for the offsets,
   # since there are no "in-between" tiles with king movement

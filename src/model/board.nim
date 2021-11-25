@@ -3,7 +3,6 @@ import ../piece_factory
 import pieces
 import std/terminal
 
-
 type
   Board* = object of RootObj
     board*: array[8, array[8, Piece]]
@@ -38,19 +37,28 @@ proc draw*(board: Board) =
     echo "  +---+---+---+---+---+---+---+---+"
   echo "    A   B   C   D   E   F   G   H  "
 
-proc isValidMoveInput*(move: seq[string]): bool =
-  ## Just to check if the input move is in correct format
-
-  # Move command consists of 2 parts (source, target)
-  if len(move) == 2:
-    # Each part is of len(2) (e.g.: A1 A3, B4 B7, ...)
-    for m in move:
-      if len(m) != 2:
-        return false
-
-      # Each Part consists of a letter followed by a digit (a-h and 1-8)
-      if m[0].isAlphaAscii and m[1].isDigit:
-        return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
+proc promotePawn(b: Board, sourcePiece: Piece, x, y: int): Piece =
+  while(true):
+    write(stdout, "\nType the symbol you'd like to promote to (Q, R, N, B) -> ")
+    case readLine(stdin).toUpperAscii
+    of "Q":
+      result = newQueen(sourcePiece.color,
+          sourcePiece.xPos, sourcePiece.yPos)
+      break
+    of "R":
+      result = newRook(sourcePiece.color,
+          sourcePiece.xPos, sourcePiece.yPos)
+      break
+    of "N":
+      result = newKnight(sourcePiece.color,
+          sourcePiece.xPos, sourcePiece.yPos)
+      break
+    of "B":
+      result = newBishop(sourcePiece.color,
+          sourcePiece.xPos, sourcePiece.yPos)
+      break
+    else:
+      continue
 
 proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
   let source = input[0]
@@ -82,42 +90,12 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
       if sourcePiece.color == targetPiece.color:
         #If the targetPiece is a friendly Piece
         return false
-      else:
-        # If moved Piece is a Pawn and on the rim after its move -> promote it
-        if sourcePiece of Pawn and rules.canPawnPromote((Pawn)sourcePiece):
+      elif sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
+      # If moved Piece is a Pawn and on the rim after its move -> promote it
+        let newPiece = promotePawn(b, sourcePiece, targetX, targetY)
 
-          while(true):
-            write(stdout, "\nType the symbol you'd like to promote to (Q, R, N, B) -> ")
-            case readLine(stdin).toUpperAscii
-            of "Q":
-              b.board[targetY][targetX] = newQueen(sourcePiece.color,
-                  sourcePiece.xPos, sourcePiece.yPos)
-              break
-            of "R":
-              b.board[targetY][targetX] = newRook(sourcePiece.color,
-                  sourcePiece.xPos, sourcePiece.yPos)
-              break
-            of "N":
-              b.board[targetY][targetX] = newKnight(sourcePiece.color,
-                  sourcePiece.xPos, sourcePiece.yPos)
-              break
-            of "B":
-              b.board[targetY][targetX] = newBishop(sourcePiece.color,
-                  sourcePiece.xPos, sourcePiece.yPos)
-              break
-            else:
-              continue
+        b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
+        b.board[targetY][targetY] = newPiece
+        return true
+      return true
 
-          b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
-          return true
-        else:
-          # If the targetPiece is a FreeTile
-          b.board[targetY][targetX] = sourcePiece
-          b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
-
-          sourcePiece.xPos = targetX
-          sourcePiece.yPos = targetY
-          return true
-    else:
-      # FreeTiles can't be moved
-      return false

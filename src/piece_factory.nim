@@ -1,6 +1,7 @@
 import model/pieces
 
 proc createPawns(): seq[Pawn] =
+
   let wPawn1 = newPawn(White, 0, 6)
   let wPawn2 = newPawn(White, 1, 6)
   let wPawn3 = newPawn(White, 2, 6)
