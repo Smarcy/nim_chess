@@ -64,8 +64,8 @@ proc isValidMovePattern(b: Board, sourcePiece: Bishop,
     let yDir = if sourcePiece.yPos > targetPiece.yPos: -1 else: 1
 
     # Check if anything is blocking the way. If yes -> don't move at all
-    for y in (sourcePiece.yPos + yDir) .. (targetPiece.yPos - yDir):
-      for x in (sourcePiece.xPos + xDir) .. (targetPiece.xPos - xDir):
+    for y in (sourcePiece.yPos + yDir) .. (targetPiece.yPos):
+      for x in (sourcePiece.xPos + xDir) .. (targetPiece.xPos):
         if b.board[y][x].color != None:
           return false
     return true
@@ -125,15 +125,22 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
 
 
-  ######## Castling - TODO
-  # TODO: Check if the equivalent Rook is able to castle (can't call canCastle atm?)
+  ######## Castling ########
+  # TODO: Check if the equivalent Rook is able to castle (can't call canCastle on targetPiece atm?)
   # 'canCastle' implicitly checks if the king is still on its initial position
-  if xOffset == 3 and yOffset == 0 and sourcePiece.canCastle:
+  if (xOffset == 3 or xOffset == 4) and yOffset == 0 and sourcePiece.canCastle:
+    #FIXME: This is an awkward solution all the way. Make it smarter some time!
     case sourcePiece.color:
     of White:
       case targetPiece.xPos:
       of 7:
+        # Short Castle for White
 
+        # Don't allow castling if there are Pieces inbetween King and Rook
+        if b.board[7][5].color != None or b.board[7][6].color != None:
+          return false
+
+        # In this special case BOTH origin Tiles are FreeTiles
         b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
             sourcePiece.xPos, sourcePiece.yPos)
         b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
@@ -142,23 +149,82 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
         sourcePiece.xPos = 6
         sourcePiece.yPos = 7
         targetPiece.xPos = 5
-        targetPiece.xPos = 7
-
+        targetPiece.yPos = 7
         b.board[7][6] = sourcePiece
         b.board[7][5] = targetPiece
+        return true
+      of 0:
+        # Long Castle for White
 
+        # Don't allow castling if there are Pieces inbetween King and Rook
+        if b.board[7][1].color != None or b.board[7][2].color != None and
+            b.board[7][3].color != None:
+          return false
+
+        # In this special case BOTH origin Tiles are FreeTiles
+        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+            sourcePiece.xPos, sourcePiece.yPos)
+        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+            targetPiece.xPos, targetPiece.yPos)
+
+        sourcePiece.xPos = 2
+        sourcePiece.yPos = 7
+        targetPiece.xPos = 3
+        targetPiece.yPos = 7
+        b.board[7][2] = sourcePiece
+        b.board[7][3] = targetPiece
         return true
       else:
-        return
+        return false
 
+    of Black:
+      case targetPiece.xPos:
+      of 7:
+        # Short Castle for Black
 
-    #   of 7:
-    # of Black:
-    #   of 0:
-    #   of 7:
+        # Don't allow castling if there are Pieces inbetween King and Rook
+        if b.board[0][5].color != None or b.board[0][6].color != None:
+          return false
+
+        # In this special case BOTH origin Tiles are FreeTiles
+        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+            sourcePiece.xPos, sourcePiece.yPos)
+        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+            targetPiece.xPos, targetPiece.yPos)
+
+        sourcePiece.xPos = 6
+        sourcePiece.yPos = 0
+        targetPiece.xPos = 5
+        targetPiece.yPos = 0
+        b.board[0][6] = sourcePiece
+        b.board[0][5] = targetPiece
+        return true
+
+      of 0:
+        # Long Castle for Black
+
+        # Don't allow castling if there are Pieces inbetween King and Rook
+        if b.board[0][1].color != None or b.board[0][2].color != None and
+            b.board[0][3].color != None:
+          return false
+
+        # In this special case BOTH origin Tiles are FreeTiles
+        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+            sourcePiece.xPos, sourcePiece.yPos)
+        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+            targetPiece.xPos, targetPiece.yPos)
+
+        sourcePiece.xPos = 2
+        sourcePiece.yPos = 0
+        targetPiece.xPos = 3
+        targetPiece.yPos = 0
+        b.board[0][2] = sourcePiece
+        b.board[0][3] = targetPiece
+        return true
+      else:
+        return false
     else:
-      return
-
+      return false
 
 
   ######## Usual single-step

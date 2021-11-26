@@ -34,8 +34,7 @@ while true:
   if isValidMoveInput(input):
     if move(input, board, currentPlayer):
       # Change currentPlayerColor if the given move was successful
-      # currentPlayer = if currentPlayer == White: Black else: White
-      discard
+      currentPlayer = if currentPlayer == White: Black else: White
     else:
       echo "Illegal Move!"
       discard readLine(stdin)
