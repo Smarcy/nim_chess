@@ -91,15 +91,10 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
         #If the targetPiece is a friendly Piece
         return false
       elif sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
-      # If moved Piece is a Pawn and on the rim after its move -> promote it
+        # If moved Piece is a Pawn and on the rim after its move -> promote it
         let newPiece = promotePawn(b, sourcePiece, targetX, targetY)
-
-        b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
         b.board[targetY][targetX] = newPiece
-        return true
       else:
-        b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
         b.board[targetY][targetX] = sourcePiece
-        return true
-
-
+      b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
+      return true

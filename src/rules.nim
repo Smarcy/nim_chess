@@ -74,6 +74,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
     targetPiece: Piece): bool =
   ## Rook Movement Ruleset
 
+
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
 
@@ -103,6 +104,8 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
 
   #After any (first) successful rook move, lose right to castle on that rook
   sourcePiece.canCastle = false
+  sourcePiece.xPos = targetPiece.xPos
+  sourcePiece.yPos = targetPiece.yPos
 
   return true
 
@@ -113,13 +116,52 @@ proc isValidMovePattern(b: Board, sourcePiece: Queen,
   return isValidMovePattern(b, cast[Bishop](sourcePiece), targetPiece) or
       isValidMovePattern(b, cast[Rook](sourcePiece), targetPiece)
 
-proc isValidMovePattern(b: Board, sourcePiece: King,
+proc isValidMovePattern(b: var Board, sourcePiece: King,
     targetPiece: Piece): bool =
   ## King Movement Ruleset
 
   let validOffsets = @[(1, 0), (0, 1), (1, 1)]
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
+
+
+  ######## Castling - TODO
+  # TODO: Check if the equivalent Rook is able to castle (can't call canCastle atm?)
+  # 'canCastle' implicitly checks if the king is still on its initial position
+  if xOffset == 3 and yOffset == 0 and sourcePiece.canCastle:
+    case sourcePiece.color:
+    of White:
+      case targetPiece.xPos:
+      of 7:
+
+        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+            sourcePiece.xPos, sourcePiece.yPos)
+        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+            targetPiece.xPos, targetPiece.yPos)
+
+        sourcePiece.xPos = 6
+        sourcePiece.yPos = 7
+        targetPiece.xPos = 5
+        targetPiece.xPos = 7
+
+        b.board[7][6] = sourcePiece
+        b.board[7][5] = targetPiece
+
+        return true
+      else:
+        return
+
+
+    #   of 7:
+    # of Black:
+    #   of 0:
+    #   of 7:
+    else:
+      return
+
+
+
+  ######## Usual single-step
 
   # Lose righ to castle after any (first) successful king move
   sourcePiece.canCastle = false
@@ -128,7 +170,7 @@ proc isValidMovePattern(b: Board, sourcePiece: King,
   # since there are no "in-between" tiles with king movement
   return (yOffset, xOffset) in validOffsets
 
-proc isValidMove*(b: Board, sourcePiece, targetPiece: Piece): bool =
+proc isValidMove*(b: var Board, sourcePiece, targetPiece: Piece): bool =
   if sourcePiece of Pawn:
     result = isValidMovePattern(b, (Pawn)sourcePiece, targetPiece)
   elif sourcePiece of Knight:
