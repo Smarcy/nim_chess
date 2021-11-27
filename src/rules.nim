@@ -126,9 +126,12 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
 
 
   ######## Castling ########
-  # TODO: Check if the equivalent Rook is able to castle (can't call canCastle on targetPiece atm?)
+  var rookPiece: Rook
+
+  if targetPiece of Rook: rookPiece = (Rook)targetPiece
   # 'canCastle' implicitly checks if the king is still on its initial position
-  if (xOffset == 3 or xOffset == 4) and yOffset == 0 and sourcePiece.canCastle:
+  if (xOffset == 3 or xOffset == 4) and yOffset == 0 and
+      sourcePiece.canCastle and rookPiece.canCastle:
     #FIXME: This is an awkward solution all the way. Make it smarter some time!
     case sourcePiece.color:
     of White:
