@@ -10,10 +10,12 @@ type
 # Import has to be after Board definition, no clue why - otheriwse cyclic dep.
 from ../rules import isValidMove, canPawnPromote
 
-let allPieces = piece_factory.createAllPieces()
 
 proc populateBoard*(): Board =
   ## Place all Pieces on the Chessboard
+
+  let allPieces = piece_factory.createAllPieces()
+
   for piece in allPieces:
     result.board[piece.yPos][piece.xPos] = piece
 
