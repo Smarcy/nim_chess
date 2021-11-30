@@ -54,3 +54,43 @@ test "bishop NE single step":
   check(b.board[6][6] == bishop)
   check(b.board[7][5] of FreeTile)
 
+test "bishop SE single step":
+  var
+    b = populateBoard()
+
+  let
+    p = b.board[1][6] # pawn
+    bishop = b.board[0][5]
+    input = @["g7", "g6", "f8", "g7"]
+
+  check(p.yPos == 1)
+  check(bishop.yPos == 0)
+  check(bishop.xPos == 5)
+  check(move(@[input[0], input[1]], b, Black))
+  check(p.yPos == 2)
+  check(move(@[input[2], input[3]], b, Black))
+  check(bishop.yPos == 1)
+  check(bishop.xPos == 6)
+  check(b.board[1][6] == bishop)
+  check(b.board[0][5] of FreeTile)
+
+test "bishop SW single step":
+  var
+    b = populateBoard()
+
+  let
+    p = b.board[1][4] # pawn
+    bishop = b.board[0][5]
+    input = @["e7", "e6", "f8", "e7"]
+
+  check(p.yPos == 1)
+  check(bishop.yPos == 0)
+  check(bishop.xPos == 5)
+  check(move(@[input[0], input[1]], b, Black))
+  check(p.yPos == 2)
+  check(move(@[input[2], input[3]], b, Black))
+  check(bishop.yPos == 1)
+  check(bishop.xPos == 4)
+  check(b.board[1][4] == bishop)
+  check(b.board[0][5] of FreeTile)
+

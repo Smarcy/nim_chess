@@ -22,4 +22,4 @@ Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem
 
 ### Notes
 
-- You may castle by setting the King ON the Rook ("e1 a1", "e1 h1", "e8 a8", "e8 h8")
+- You may castle by setting the King ON the Rook ("e1 [a1|h1]", "e8 [a8|h8]")
