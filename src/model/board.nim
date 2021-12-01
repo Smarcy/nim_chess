@@ -40,6 +40,7 @@ proc draw*(board: Board) =
   echo "    A   B   C   D   E   F   G   H  "
 
 proc promotePawn(b: Board, sourcePiece: Piece, x, y: int): Piece =
+  ## Promote a Pawn into another Piece by user choice
   while(true):
     write(stdout, "\nType the symbol you'd like to promote to (Q, R, N, B) -> ")
     case readLine(stdin).toUpperAscii
@@ -63,6 +64,9 @@ proc promotePawn(b: Board, sourcePiece: Piece, x, y: int): Piece =
       continue
 
 proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
+  ## Perform the move
+  ## Set sourceTile as FreeTile
+  ## Set targetTile to sourcePiece
   let source = input[0]
   let target = input[1]
 

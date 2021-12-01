@@ -232,7 +232,7 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
 
   ######## Usual single-step
 
-  # Lose righ to castle after any (first) successful king move
+  # Lose right to castle after any (first) successful king move
   sourcePiece.canCastle = false
 
   # In this case it is sufficient to test for the offsets,
@@ -240,6 +240,7 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
   return (yOffset, xOffset) in validOffsets
 
 proc isValidMove*(b: var Board, sourcePiece, targetPiece: Piece): bool =
+  ## Supermethod to separate different Piece movement patterns
   if sourcePiece of Pawn:
     result = isValidMovePattern(b, (Pawn)sourcePiece, targetPiece)
   elif sourcePiece of Knight:
@@ -254,6 +255,7 @@ proc isValidMove*(b: var Board, sourcePiece, targetPiece: Piece): bool =
     result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
 
 proc canPawnPromote*(p: Pawn): bool =
+  ## Check if a moved Pawn is able to be promoted to another Piece
   # This method is called if a pawn does a successful move forward
   case p.color
   # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim

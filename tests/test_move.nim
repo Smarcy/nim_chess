@@ -94,3 +94,47 @@ test "bishop SW single step":
   check(b.board[1][4] == bishop)
   check(b.board[0][5] of FreeTile)
 
+test "knight all steps in one test":
+  var
+    b = populateBoard()
+
+  let
+    knight = b.board[7][1]
+    input = @["b1", "c3",
+              "c3", "b5",
+              "b5", "d6",
+              "d6", "f5",
+              "f5", "g3",
+              "f5", "e3",
+              "e3", "c4",
+              "c4", "a3"]
+
+  check(b.board[7][1] == knight)
+  check(move(@[input[0], input[1]], b, White)) # NE
+  check(knight.xPos == 2)
+  check(knight.yPos == 5)
+  check(b.board[5][2] == knight)
+  check(b.board[7][1] of FreeTile)
+  check(move(@[input[2], input[3]], b, White)) # NW
+  check(b.board[3][1] == knight)
+  check(b.board[5][2] of FreeTile)
+  check(move(@[input[4], input[5]], b, White)) # EN
+  check(b.board[2][3] == knight)
+  check(b.board[3][1] of FreeTile)
+  check(move(@[input[6], input[7]], b, White)) # ES
+  check(b.board[3][5] == knight)
+  check(b.board[2][3] of FreeTile)
+  check(move(@[input[8], input[9]], b, White)) # SE
+  check(b.board[5][6] == knight)
+  check(b.board[3][5] of FreeTile)
+  check(move(@["g3", "f5"], b, White)) # Take Knight back to test SW dir (NW)
+  check(move(@[input[10], input[11]], b, White)) # SW
+  check(b.board[5][4] == knight)
+  check(b.board[3][5] of FreeTile)
+  check(move(@[input[12], input[13]], b, White)) # WN
+  check(b.board[4][2] == knight)
+  check(b.board[5][4] of FreeTile)
+  check(move(@[input[14], input[15]], b, White)) # WS
+  check(b.board[5][0] == knight)
+  check(b.board[4][2] of FreeTile)
+
