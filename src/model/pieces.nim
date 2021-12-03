@@ -46,3 +46,4 @@ proc newKing*(color: Color, xPos, yPos: int, canCastle: bool = true,
 
 proc newFreeTile*(color: Color, xPos, yPos: int, symbol: char = ' '): FreeTile =
   FreeTile(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
+

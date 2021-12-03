@@ -28,7 +28,7 @@ while true:
 
   echo "\n", currentPlayer, "'s turn"
 
-  write(stdout, "\nType your move (ex.: A2 A3) -> ")
+  write(stdout, "\nType your move (ex.: \"a2 a3\") -> ")
   var input = readLine(stdin).split(" ")
 
   if isValidMoveInput(input):

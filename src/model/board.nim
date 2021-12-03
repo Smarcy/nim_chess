@@ -8,6 +8,7 @@ type
     board*: array[8, array[8, Piece]]
 
 # Import has to be after Board definition, no clue why - otheriwse cyclic dep.
+# edit: prolly because the imported procs already use Board. Makes sense I guess.
 from ../rules import isValidMove, canPawnPromote
 
 
@@ -64,9 +65,9 @@ proc promotePawn(b: Board, sourcePiece: Piece, x, y: int): Piece =
       continue
 
 proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
-  ## Perform the move
-  ## Set sourceTile as FreeTile
-  ## Set targetTile to sourcePiece
+  ##[ Perform the move.
+    Set sourceTile as FreeTile.
+    Set targetTile to sourcePiece.]##
   let source = input[0]
   let target = input[1]
 
@@ -101,8 +102,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
           return false
       elif sourcePiece of Pawn and canPawnPromote((Pawn)sourcePiece):
         # If moved Piece is a Pawn and on the rim after its move -> promote it
-        let newPiece = promotePawn(b, sourcePiece, targetX, targetY)
-        b.board[targetY][targetX] = newPiece
+        b.board[targetY][targetX] = promotePawn(b, sourcePiece, targetX, targetY)
       else:
         b.board[targetY][targetX] = sourcePiece
       b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)

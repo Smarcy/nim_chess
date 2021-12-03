@@ -74,7 +74,6 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
     targetPiece: Piece): bool =
   ## Rook Movement Ruleset
 
-
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
 
@@ -89,6 +88,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
   if sourcePiece.xPos == targetPiece.xPos: xDir = 0
   if sourcePiece.yPos == targetPiece.yPos: yDir = 0
 
+  # Check for Pieces in the way
   if xDir == 0 and yDir == 1:
     for i in sourcePiece.yPos+1 .. targetPiece.yPos-1:
       if b.board[i][sourcePiece.xPos].color != None: return false
@@ -102,7 +102,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
     for i in targetPiece.xPos+1 .. sourcePiece.xPos-1:
       if b.board[sourcePiece.yPos][i].color != None: return false
 
-  #After any (first) successful rook move, lose right to castle on that rook
+  # After any (first) successful rook move, lose right to castle on that rook
   sourcePiece.canCastle = false
   sourcePiece.xPos = targetPiece.xPos
   sourcePiece.yPos = targetPiece.yPos
@@ -111,6 +111,7 @@ proc isValidMovePattern(b: Board, sourcePiece: Rook,
 
 proc isValidMovePattern(b: Board, sourcePiece: Queen,
     targetPiece: Piece): bool =
+  ## Queen Movement Ruleset
 
   # If given move is valid for rook OR bishop, it is valid for queen
   return isValidMovePattern(b, cast[Bishop](sourcePiece), targetPiece) or
@@ -237,10 +238,11 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
 
   # In this case it is sufficient to test for the offsets,
   # since there are no "in-between" tiles with king movement
-  return (yOffset, xOffset) in validOffsets
+  return (yOffset, xOffset) in validOffsets and targetPiece.color !=
+      sourcePiece.color
 
 proc isValidMove*(b: var Board, sourcePiece, targetPiece: Piece): bool =
-  ## Supermethod to separate different Piece movement patterns
+  ## Supermethod to separate different Piece movement patterns depending on Piece-type
   if sourcePiece of Pawn:
     result = isValidMovePattern(b, (Pawn)sourcePiece, targetPiece)
   elif sourcePiece of Knight:
@@ -255,14 +257,14 @@ proc isValidMove*(b: var Board, sourcePiece, targetPiece: Piece): bool =
     result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
 
 proc canPawnPromote*(p: Pawn): bool =
-  ## Check if a moved Pawn is able to be promoted to another Piece
-  # This method is called if a pawn does a successful move forward
+  ##[ Check if a moved Pawn is able to be promoted to another Piece.
+    This proc is called if a pawn does a successful move forward.]##
   case p.color
   # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
   of Black:
-    if p.yPos == 6: return true
+    return p.yPos == 6
   of White:
-    if p.yPos == 1: return true
+    return p.yPos == 1
   else:
     return false
 
