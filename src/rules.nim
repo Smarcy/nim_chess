@@ -117,6 +117,74 @@ proc isValidMovePattern(b: Board, sourcePiece: Queen,
   return isValidMovePattern(b, cast[Bishop](sourcePiece), targetPiece) or
       isValidMovePattern(b, cast[Rook](sourcePiece), targetPiece)
 
+proc short_castle(b: var Board, sourcePiece: King,
+    targetPiece: Rook): bool =
+  var x, y: int
+
+  case sourcePiece.color:
+    of White:
+      x = 5
+      y = 7
+    of Black:
+      x = 5
+      y = 0
+    else:
+      return false
+
+  # Check if any Piece is blocking the way
+  if b.board[y][x].color != None or b.board[y][x+1].color != None:
+    return false
+
+  # TODO: return false if the king is in check on the way
+
+  else:
+    if sourcePiece.canCastle and targetPiece.canCastle:
+      # In this special case BOTH origin Tiles are FreeTiles
+      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+          sourcePiece.xPos, sourcePiece.yPos)
+      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+          targetPiece.xPos, targetPiece.yPos)
+
+      sourcePiece.xPos = (x+1) # x+1 = 6 for white and black
+      targetPiece.xPos = x # x = 5 for white and black
+
+      b.board[y][6] = sourcePiece
+      b.board[y][5] = targetPiece
+      return true
+
+proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
+  var y: int
+
+  case sourcePiece.color:
+    of White:
+      y = 7
+    of Black:
+      y = 0
+    else:
+      return false
+
+  # TODO: return false if the king is in check on the way
+  # Check for Pieces blocking the way
+  if b.board[y][1].color != None or b.board[y][2].color != None or b.board[y][
+      3].color != None:
+    echo "COLOR FALSE"
+    return false
+  else:
+    if sourcePiece.canCastle and targetPiece.canCastle:
+
+      # In this special case BOTH origin Tiles are FreeTiles
+      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+          sourcePiece.xPos, sourcePiece.yPos)
+      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+          targetPiece.xPos, targetPiece.yPos)
+
+      sourcePiece.xPos = 2
+      targetPiece.xPos = 3
+      b.board[y][2] = sourcePiece
+      b.board[y][3] = targetPiece
+      return true
+
+
 proc isValidMovePattern(b: var Board, sourcePiece: King,
     targetPiece: Piece): bool =
   ## King Movement Ruleset
@@ -131,107 +199,18 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
 
   if targetPiece of Rook: rookPiece = (Rook)targetPiece
   # 'canCastle' implicitly checks if the king is still on its initial position
-  if (xOffset == 3 or xOffset == 4) and yOffset == 0 and
-      sourcePiece.canCastle and rookPiece.canCastle:
-    #FIXME: This is an awkward solution all the way. Make it smarter some time!
-    case sourcePiece.color:
-    of White:
-      case targetPiece.xPos:
-      of 7:
-        # Short Castle for White
-
-        # Don't allow castling if there are Pieces inbetween King and Rook
-        if b.board[7][5].color != None or b.board[7][6].color != None:
-          return false
-
-        # In this special case BOTH origin Tiles are FreeTiles
-        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-            sourcePiece.xPos, sourcePiece.yPos)
-        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-            targetPiece.xPos, targetPiece.yPos)
-
-        sourcePiece.xPos = 6
-        sourcePiece.yPos = 7
-        targetPiece.xPos = 5
-        targetPiece.yPos = 7
-        b.board[7][6] = sourcePiece
-        b.board[7][5] = targetPiece
-        return true
-      of 0:
-        # Long Castle for White
-
-        # Don't allow castling if there are Pieces inbetween King and Rook
-        if b.board[7][1].color != None or b.board[7][2].color != None and
-            b.board[7][3].color != None:
-          return false
-
-        # In this special case BOTH origin Tiles are FreeTiles
-        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-            sourcePiece.xPos, sourcePiece.yPos)
-        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-            targetPiece.xPos, targetPiece.yPos)
-
-        sourcePiece.xPos = 2
-        sourcePiece.yPos = 7
-        targetPiece.xPos = 3
-        targetPiece.yPos = 7
-        b.board[7][2] = sourcePiece
-        b.board[7][3] = targetPiece
-        return true
-      else:
-        return false
-
-    of Black:
-      case targetPiece.xPos:
-      of 7:
-        # Short Castle for Black
-
-        # Don't allow castling if there are Pieces inbetween King and Rook
-        if b.board[0][5].color != None or b.board[0][6].color != None:
-          return false
-
-        # In this special case BOTH origin Tiles are FreeTiles
-        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-            sourcePiece.xPos, sourcePiece.yPos)
-        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-            targetPiece.xPos, targetPiece.yPos)
-
-        sourcePiece.xPos = 6
-        sourcePiece.yPos = 0
-        targetPiece.xPos = 5
-        targetPiece.yPos = 0
-        b.board[0][6] = sourcePiece
-        b.board[0][5] = targetPiece
-        return true
-
-      of 0:
-        # Long Castle for Black
-
-        # Don't allow castling if there are Pieces inbetween King and Rook
-        if b.board[0][1].color != None or b.board[0][2].color != None and
-            b.board[0][3].color != None:
-          return false
-
-        # In this special case BOTH origin Tiles are FreeTiles
-        b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-            sourcePiece.xPos, sourcePiece.yPos)
-        b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-            targetPiece.xPos, targetPiece.yPos)
-
-        sourcePiece.xPos = 2
-        sourcePiece.yPos = 0
-        targetPiece.xPos = 3
-        targetPiece.yPos = 0
-        b.board[0][2] = sourcePiece
-        b.board[0][3] = targetPiece
-        return true
-      else:
-        return false
+  if (xOffset == 3 or xOffset == 4) and yOffset == 0:
+    case targetPiece.xPos:
+    of 7:
+      # Short Castle for Black
+      return short_castle(b, sourcePiece, rookPiece)
+    of 0:
+      # Long Castle for Black
+      return long_castle(b, sourcePiece, rookPiece)
     else:
       return false
 
-
-  ######## Usual single-step
+  ######## Usual single-step ########
 
   # Lose right to castle after any (first) successful king move
   sourcePiece.canCastle = false
