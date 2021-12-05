@@ -1,5 +1,5 @@
 import strutils
-import ../piece_factory
+import ../factories/piece_factory
 import pieces
 import std/terminal
 
@@ -9,7 +9,7 @@ type
 
 # Import has to be after Board definition, no clue why - otheriwse cyclic dep.
 # edit: prolly because the imported procs already use Board. Makes sense I guess.
-from ../rules import isValidMove, canPawnPromote
+from ../game/rules import isValidMove, canPawnPromote
 
 
 proc populateBoard*(): Board =

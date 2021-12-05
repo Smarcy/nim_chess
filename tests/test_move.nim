@@ -1,6 +1,6 @@
 import unittest
-import ../src/model/board
-import ../src/model/pieces
+import ../src/nim_chess/model/board
+import ../src/nim_chess/model/pieces
 
 test "pawn single step":
   var

@@ -1,4 +1,4 @@
-import model/pieces
+import ../model/pieces
 
 proc createPawns(): seq[Pawn] =
 

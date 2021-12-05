@@ -1,8 +1,73 @@
-import model/pieces
-from model/board import Board
+import ../model/pieces
+from ../model/board import Board
+
+
+proc canPawnPromote*(p: Pawn): bool =
+  ##[ Check if a moved Pawn is able to be promoted to another Piece.
+    This proc is called if a pawn does a successful move forward.]##
+  case p.color
+  # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
+  of Black: return p.yPos == 6
+  of White: return p.yPos == 1
+  else: return false
+
+proc short_castle(b: var Board, sourcePiece: King,
+    targetPiece: Rook): bool =
+  var y: int
+
+  case sourcePiece.color:
+    of White: y = 7
+    of Black: y = 0
+    else: return false
+
+  # TODO: return false if the king is in check on the way
+  # Check if any Piece is blocking the way
+  if b.board[y][5].color != None or b.board[y][6].color != None:
+    return false
+
+  else:
+    if sourcePiece.canCastle and targetPiece.canCastle:
+      # In this special case BOTH origin Tiles are FreeTiles
+      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+          sourcePiece.xPos, sourcePiece.yPos)
+      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+          targetPiece.xPos, targetPiece.yPos)
+
+      sourcePiece.xPos = 6
+      targetPiece.xPos = 5
+      b.board[y][6] = sourcePiece
+      b.board[y][5] = targetPiece
+      return true
+
+proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
+  var y: int
+
+  case sourcePiece.color:
+    of White: y = 7
+    of Black: y = 0
+    else: return false
+
+  # TODO: return false if the king is in check on the way
+  # Check for Pieces blocking the way
+  if b.board[y][1].color != None or b.board[y][2].color != None or b.board[y][
+      3].color != None:
+    return false
+  else:
+    if sourcePiece.canCastle and targetPiece.canCastle:
+
+      # In this special case BOTH origin Tiles are FreeTiles
+      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+          sourcePiece.xPos, sourcePiece.yPos)
+      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+          targetPiece.xPos, targetPiece.yPos)
+
+      sourcePiece.xPos = 2
+      targetPiece.xPos = 3
+      b.board[y][2] = sourcePiece
+      b.board[y][3] = targetPiece
+      return true
 
 # Overload isValidMovePattern for every Piece type
-
 proc isValidMovePattern(b: Board, sourcePiece: Pawn,
     targetPiece: Piece): bool =
   ## Pawn Movement Ruleset
@@ -117,65 +182,6 @@ proc isValidMovePattern(b: Board, sourcePiece: Queen,
   return isValidMovePattern(b, cast[Bishop](sourcePiece), targetPiece) or
       isValidMovePattern(b, cast[Rook](sourcePiece), targetPiece)
 
-proc short_castle(b: var Board, sourcePiece: King,
-    targetPiece: Rook): bool =
-  var y: int
-
-  case sourcePiece.color:
-    of White:
-      y = 7
-    of Black:
-      y = 0
-    else:
-      return false
-
-  # TODO: return false if the king is in check on the way
-  # Check if any Piece is blocking the way
-  if b.board[y][5].color != None or b.board[y][6].color != None:
-    return false
-
-  else:
-    if sourcePiece.canCastle and targetPiece.canCastle:
-      # In this special case BOTH origin Tiles are FreeTiles
-      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-          sourcePiece.xPos, sourcePiece.yPos)
-      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-          targetPiece.xPos, targetPiece.yPos)
-
-      sourcePiece.xPos = 6
-      targetPiece.xPos = 5
-      b.board[y][6] = sourcePiece
-      b.board[y][5] = targetPiece
-      return true
-
-proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
-  var y: int
-
-  case sourcePiece.color:
-    of White: y = 7
-    of Black: y = 0
-    else: return false
-
-  # TODO: return false if the king is in check on the way
-  # Check for Pieces blocking the way
-  if b.board[y][1].color != None or b.board[y][2].color != None or b.board[y][
-      3].color != None:
-    return false
-  else:
-    if sourcePiece.canCastle and targetPiece.canCastle:
-
-      # In this special case BOTH origin Tiles are FreeTiles
-      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-          sourcePiece.xPos, sourcePiece.yPos)
-      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-          targetPiece.xPos, targetPiece.yPos)
-
-      sourcePiece.xPos = 2
-      targetPiece.xPos = 3
-      b.board[y][2] = sourcePiece
-      b.board[y][3] = targetPiece
-      return true
-
 proc isValidMovePattern(b: var Board, sourcePiece: King,
     targetPiece: Piece): bool =
   ## King Movement Ruleset
@@ -222,16 +228,4 @@ proc isValidMove*(b: var Board, sourcePiece, targetPiece: Piece): bool =
     result = isValidMovePattern(b, (Queen)sourcePiece, targetPiece)
   elif sourcePiece of King:
     result = isValidMovePattern(b, (King)sourcePiece, targetPiece)
-
-proc canPawnPromote*(p: Pawn): bool =
-  ##[ Check if a moved Pawn is able to be promoted to another Piece.
-    This proc is called if a pawn does a successful move forward.]##
-  case p.color
-  # A Pawn is being promoted if its position BEFORE the move is 1 off of the rim
-  of Black:
-    return p.yPos == 6
-  of White:
-    return p.yPos == 1
-  else:
-    return false
 
