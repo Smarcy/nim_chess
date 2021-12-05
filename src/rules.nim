@@ -24,8 +24,8 @@ proc isValidMovePattern(b: Board, sourcePiece: Pawn,
 
   if (targetPiece.yPos == sourcePiece.yPos - (2*x)) and (sourcePiece.xPos ==
       targetPiece.xPos):
-    if sourcePiece.yPos == y and b.board[sourcePiece.yPos-x][
-        sourcePiece.xPos].color == None:
+    if sourcePiece.yPos == y and
+      b.board[sourcePiece.yPos-x][sourcePiece.xPos].color == None:
     # If on initial Position and no piece in the way, accept double step
 
       return true
@@ -119,40 +119,6 @@ proc isValidMovePattern(b: Board, sourcePiece: Queen,
 
 proc short_castle(b: var Board, sourcePiece: King,
     targetPiece: Rook): bool =
-  var x, y: int
-
-  case sourcePiece.color:
-    of White:
-      x = 5
-      y = 7
-    of Black:
-      x = 5
-      y = 0
-    else:
-      return false
-
-  # Check if any Piece is blocking the way
-  if b.board[y][x].color != None or b.board[y][x+1].color != None:
-    return false
-
-  # TODO: return false if the king is in check on the way
-
-  else:
-    if sourcePiece.canCastle and targetPiece.canCastle:
-      # In this special case BOTH origin Tiles are FreeTiles
-      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
-          sourcePiece.xPos, sourcePiece.yPos)
-      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
-          targetPiece.xPos, targetPiece.yPos)
-
-      sourcePiece.xPos = (x+1) # x+1 = 6 for white and black
-      targetPiece.xPos = x # x = 5 for white and black
-
-      b.board[y][6] = sourcePiece
-      b.board[y][5] = targetPiece
-      return true
-
-proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
   var y: int
 
   case sourcePiece.color:
@@ -164,10 +130,36 @@ proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
       return false
 
   # TODO: return false if the king is in check on the way
+  # Check if any Piece is blocking the way
+  if b.board[y][5].color != None or b.board[y][6].color != None:
+    return false
+
+  else:
+    if sourcePiece.canCastle and targetPiece.canCastle:
+      # In this special case BOTH origin Tiles are FreeTiles
+      b.board[sourcePiece.yPos][sourcePiece.xPos] = newFreeTile(None,
+          sourcePiece.xPos, sourcePiece.yPos)
+      b.board[targetPiece.yPos][targetPiece.xPos] = newFreeTile(None,
+          targetPiece.xPos, targetPiece.yPos)
+
+      sourcePiece.xPos = 6
+      targetPiece.xPos = 5
+      b.board[y][6] = sourcePiece
+      b.board[y][5] = targetPiece
+      return true
+
+proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
+  var y: int
+
+  case sourcePiece.color:
+    of White: y = 7
+    of Black: y = 0
+    else: return false
+
+  # TODO: return false if the king is in check on the way
   # Check for Pieces blocking the way
   if b.board[y][1].color != None or b.board[y][2].color != None or b.board[y][
       3].color != None:
-    echo "COLOR FALSE"
     return false
   else:
     if sourcePiece.canCastle and targetPiece.canCastle:
@@ -184,7 +176,6 @@ proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
       b.board[y][3] = targetPiece
       return true
 
-
 proc isValidMovePattern(b: var Board, sourcePiece: King,
     targetPiece: Piece): bool =
   ## King Movement Ruleset
@@ -192,7 +183,6 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
   let validOffsets = @[(1, 0), (0, 1), (1, 1)]
   let yOffset = abs(sourcePiece.yPos - targetPiece.yPos)
   let xOffset = abs(sourcePiece.xPos - targetPiece.xPos)
-
 
   ######## Castling ########
   var rookPiece: Rook
@@ -202,10 +192,8 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
   if (xOffset == 3 or xOffset == 4) and yOffset == 0:
     case targetPiece.xPos:
     of 7:
-      # Short Castle for Black
       return short_castle(b, sourcePiece, rookPiece)
     of 0:
-      # Long Castle for Black
       return long_castle(b, sourcePiece, rookPiece)
     else:
       return false

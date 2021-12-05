@@ -92,11 +92,10 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
 
   # Check if move input fits into piece-move-pattern
   if rules.isValidMove(b, sourcePiece, targetPiece):
-    # Replace source tile with a FreeTile
+    # Move onto a Tile with another Piece on it
     if sourcePiece.color != None:
       if sourcePiece.color == targetPiece.color:
         # Allow the move if its King and Rook (castling)
-        # TODO: This can be abused on any tile, fix it!
         if not(sourcePiece of King) and not(targetPiece of Rook):
         #If the targetPiece is a friendly Piece
           return false
@@ -104,6 +103,7 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
         # If moved Piece is a Pawn and on the rim after its move -> promote it
         b.board[targetY][targetX] = promotePawn(b, sourcePiece, targetX, targetY)
       else:
+        # Usual move on a FreeTile
         b.board[targetY][targetX] = sourcePiece
       b.board[sourceY][sourceX] = newFreeTile(None, sourceX, sourceY)
 
@@ -111,3 +111,4 @@ proc move*(input: seq[string], b: var Board, currPlayer: Color): bool =
       sourcePiece.xPos = targetX
       sourcePiece.yPos = targetY
       return true
+
