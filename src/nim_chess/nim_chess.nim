@@ -20,7 +20,6 @@ proc isValidMoveInput*(move: seq[string]): bool =
       if m[0].isAlphaAscii and m[1].isDigit:
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
-
 ################ Game Loop ################
 while true:
   discard os.execShellCmd("clear")
@@ -35,6 +34,7 @@ while true:
     if move(input, board, currentPlayer):
       # Change currentPlayerColor if the given move was successful
       currentPlayer = if currentPlayer == White: Black else: White
+      discard readLine(stdin)
     else:
       echo "Illegal Move!"
       discard readLine(stdin)

@@ -19,6 +19,8 @@ Idea shamelessly stolen from <a href="https://github.com/rokemHB/4dChess/">rokem
 * [ ] en passant
 * [X] castling
 * [ ] undo/redo mechanic
+* [ ] load position from FEN
+* [ ] save position to FEN
 
 ### Notes
 

@@ -1,7 +1,6 @@
 import ../model/pieces
 from ../model/board import Board
 
-
 proc canPawnPromote*(p: Pawn): bool =
   ##[ Check if a moved Pawn is able to be promoted to another Piece.
     This proc is called if a pawn does a successful move forward.]##
@@ -15,10 +14,10 @@ proc short_castle(b: var Board, sourcePiece: King,
     targetPiece: Rook): bool =
   var y: int
 
-  case sourcePiece.color:
-    of White: y = 7
-    of Black: y = 0
-    else: return false
+  case sourcePiece.color
+  of White: y = 7
+  of Black: y = 0
+  else: return false
 
   # TODO: return false if the king is in check on the way
   # Check if any Piece is blocking the way
@@ -42,10 +41,10 @@ proc short_castle(b: var Board, sourcePiece: King,
 proc long_castle(b: var Board, sourcePiece: King, targetPiece: Rook): bool =
   var y: int
 
-  case sourcePiece.color:
-    of White: y = 7
-    of Black: y = 0
-    else: return false
+  case sourcePiece.color
+  of White: y = 7
+  of Black: y = 0
+  else: return false
 
   # TODO: return false if the king is in check on the way
   # Check for Pieces blocking the way
@@ -196,7 +195,7 @@ proc isValidMovePattern(b: var Board, sourcePiece: King,
   if targetPiece of Rook: rookPiece = (Rook)targetPiece
   # 'canCastle' implicitly checks if the king is still on its initial position
   if (xOffset == 3 or xOffset == 4) and yOffset == 0:
-    case targetPiece.xPos:
+    case targetPiece.xPos
     of 7:
       return short_castle(b, sourcePiece, rookPiece)
     of 0:
