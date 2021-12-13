@@ -14,87 +14,109 @@ test "pawn single step":
   check(move(input, b, Black)) # == true
   check(p.yPos == 2)
 
-test "bishop NW single step":
+test "white bishop NW/SE single step":
   var
     b = populateBoard()
 
   let
     p = b.board[6][4] # pawn
     bishop = b.board[7][5]
-    input = @["e2", "e3", "f1", "e2"]
+    input = @["e2", "e3", "f1", "e2", "e2", "f1"]
 
   check(p.yPos == 6)
   check(bishop.yPos == 7)
   check(bishop.xPos == 5)
   check(move(@[input[0], input[1]], b, White))
   check(p.yPos == 5)
-  check(move(@[input[2], input[3]], b, White))
+  check(move(@[input[2], input[3]], b, White)) # NW step
   check(bishop.yPos == 6)
   check(bishop.xPos == 4)
   check(b.board[6][4] == bishop)
   check(b.board[7][5] of FreeTile)
 
-test "bishop NE single step":
+  check(move(@[input[4], input[5]], b, White)) # SE step
+  check(bishop.yPos == 7)
+  check(bishop.xPos == 5)
+  check(b.board[7][5] == bishop)
+  check(b.board[6][4] of FreeTile)
+
+test "white bishop NE/SW single step":
   var
     b = populateBoard()
 
   let
     p = b.board[6][6] # pawn
     bishop = b.board[7][5]
-    input = @["g2", "g3", "f1", "g2"]
+    input = @["g2", "g3", "f1", "g2", "g2", "f1"]
 
   check(p.yPos == 6)
   check(bishop.yPos == 7)
   check(bishop.xPos == 5)
   check(move(@[input[0], input[1]], b, White))
   check(p.yPos == 5)
-  check(move(@[input[2], input[3]], b, White))
+  check(move(@[input[2], input[3]], b, White)) # NE step
   check(bishop.yPos == 6)
   check(bishop.xPos == 6)
   check(b.board[6][6] == bishop)
   check(b.board[7][5] of FreeTile)
 
-test "bishop SE single step":
+  check(move(@[input[4], input[5]], b, White)) # SW step
+  check(bishop.yPos == 7)
+  check(bishop.xPos == 5)
+  check(b.board[7][5] == bishop)
+  check(b.board[6][6] of FreeTile)
+
+test "black bishop SE/NW single step":
   var
     b = populateBoard()
 
   let
     p = b.board[1][6] # pawn
     bishop = b.board[0][5]
-    input = @["g7", "g6", "f8", "g7"]
+    input = @["g7", "g6", "f8", "g7", "g7", "f8"]
 
   check(p.yPos == 1)
   check(bishop.yPos == 0)
   check(bishop.xPos == 5)
   check(move(@[input[0], input[1]], b, Black))
   check(p.yPos == 2)
-  check(move(@[input[2], input[3]], b, Black))
+  check(move(@[input[2], input[3]], b, Black)) # SE step
   check(bishop.yPos == 1)
   check(bishop.xPos == 6)
   check(b.board[1][6] == bishop)
   check(b.board[0][5] of FreeTile)
+  check(move(@[input[4], input[5]], b, Black)) # NW step
+  check(bishop.yPos == 0)
+  check(bishop.xPos == 5)
+  check(b.board[0][5] == bishop)
+  check(b.board[1][6] of FreeTile)
 
-test "bishop SW single step":
+test "black bishop SW/NE single step":
   var
     b = populateBoard()
 
   let
     p = b.board[1][4] # pawn
     bishop = b.board[0][5]
-    input = @["e7", "e6", "f8", "e7"]
+    input = @["e7", "e6", "f8", "e7", "e7", "f8"]
 
   check(p.yPos == 1)
   check(bishop.yPos == 0)
   check(bishop.xPos == 5)
   check(move(@[input[0], input[1]], b, Black))
   check(p.yPos == 2)
-  check(move(@[input[2], input[3]], b, Black))
+  check(move(@[input[2], input[3]], b, Black)) # SW step
   check(bishop.yPos == 1)
   check(bishop.xPos == 4)
   check(b.board[1][4] == bishop)
   check(b.board[0][5] of FreeTile)
+  check(move(@[input[4], input[5]], b, Black)) # NE step
+  check(bishop.yPos == 0)
+  check(bishop.xPos == 5)
+  check(b.board[0][5] == bishop)
+  check(b.board[1][4] of FreeTile)
 
-test "knight all steps in one test":
+test "black knight all steps in one test":
   var
     b = populateBoard()
 
