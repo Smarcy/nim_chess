@@ -14,7 +14,7 @@ test "pawn single step":
   check(move(input, b, Black)) # == true
   check(p.yPos == 2)
 
-test "white bishop NW/SE single step":
+test "white bishop NW/SE single step dist=1":
   var
     b = populateBoard()
 
@@ -40,7 +40,7 @@ test "white bishop NW/SE single step":
   check(b.board[7][5] == bishop)
   check(b.board[6][4] of FreeTile)
 
-test "white bishop NE/SW single step":
+test "white bishop NE/SW single step dist=1":
   var
     b = populateBoard()
 
@@ -66,7 +66,7 @@ test "white bishop NE/SW single step":
   check(b.board[7][5] == bishop)
   check(b.board[6][6] of FreeTile)
 
-test "black bishop SE/NW single step":
+test "black bishop SE/NW single step dist=1":
   var
     b = populateBoard()
 
@@ -91,7 +91,7 @@ test "black bishop SE/NW single step":
   check(b.board[0][5] == bishop)
   check(b.board[1][6] of FreeTile)
 
-test "black bishop SW/NE single step":
+test "black bishop SW/NE single step dist=1":
   var
     b = populateBoard()
 
@@ -116,7 +116,7 @@ test "black bishop SW/NE single step":
   check(b.board[0][5] == bishop)
   check(b.board[1][4] of FreeTile)
 
-test "white knight all steps in one test":
+test "white knight all directions in one test":
   var
     b = populateBoard()
 
@@ -160,7 +160,7 @@ test "white knight all steps in one test":
   check(b.board[5][0] == knight)
   check(b.board[4][2] of FreeTile)
 
-test "black knight all steps in one test":
+test "black knight all directions in one test":
   var
     b = populateBoard()
 
@@ -217,3 +217,83 @@ test "black knight all steps in one test":
   check(b.board[0][6] == knight)
   check(b.board[2][7] of FreeTile)
 
+test "black rook all directions with dist=1":
+  var
+    b = populateBoard()
+
+  let
+    rook = b.board[0][0]
+    input = @["a8", "a7",
+              "a7", "b7",
+              "b7", "b8",
+              "b8", "a8"]
+
+  check(b.board[0][0] == rook)
+  check(rook of Rook)
+  check(rook.xPos == 0)
+  check(rook.yPos == 0)
+
+  # Remove adjacent Pieces without using 'move()' (move would distort test results)
+  b.board[1][0] = newFreeTile(None, 0, 1)
+  b.board[1][1] = newFreeTile(None, 1, 1)
+  b.board[0][1] = newFreeTile(None, 1, 0)
+
+  check(move(@[input[0], input[1]], b, Black))
+  check(rook.xPos == 0)
+  check(rook.yPos == 1)
+  check(b.board[1][0] == rook)
+  check(move(@[input[2], input[3]], b, Black))
+  check(rook.xPos == 1)
+  check(rook.yPos == 1)
+  check(b.board[1][1] == rook)
+  check(move(@[input[4], input[5]], b, Black))
+  check(rook.xPos == 1)
+  check(rook.yPos == 0)
+  check(b.board[0][1] == rook)
+  check(move(@[input[6], input[7]], b, Black))
+  check(rook.xPos == 0)
+  check(rook.yPos == 0)
+  check(b.board[0][0] == rook)
+
+test "white rook all directions with dist=1":
+  var
+    b = populateBoard()
+
+  let
+    rook = b.board[7][0]
+    input = @["a1", "a2",
+              "a2", "b2",
+              "b2", "b1",
+              "b1", "a1"]
+
+  check(b.board[7][0] == rook)
+  check(rook of Rook)
+  check(rook.xPos == 0)
+  check(rook.yPos == 7)
+
+  # Remove adjacent Pieces without using 'move()' (move would distort test results)
+  b.board[6][0] = newFreeTile(None, 0, 6)
+  b.board[6][1] = newFreeTile(None, 1, 6)
+  b.board[7][1] = newFreeTile(None, 1, 7)
+
+  check(move(@[input[0], input[1]], b, White))
+  check(rook.xPos == 0)
+  check(rook.yPos == 6)
+  check(b.board[6][0] == rook)
+  check(move(@[input[2], input[3]], b, White))
+  check(rook.xPos == 1)
+  check(rook.yPos == 6)
+  check(b.board[6][1] == rook)
+  check(move(@[input[4], input[5]], b, White))
+  check(rook.xPos == 1)
+  check(rook.yPos == 7)
+  check(b.board[7][1] == rook)
+  check(move(@[input[6], input[7]], b, White))
+  check(rook.xPos == 0)
+  check(rook.yPos == 7)
+  check(b.board[7][0] == rook)
+
+#TODO: Test castling (incl. canCastle bool)
+  #      Test King Movement
+  #      Test Queen Movement
+  #      Test isChecked
