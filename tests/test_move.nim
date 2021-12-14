@@ -116,7 +116,7 @@ test "black bishop SW/NE single step":
   check(b.board[0][5] == bishop)
   check(b.board[1][4] of FreeTile)
 
-test "black knight all steps in one test":
+test "white knight all steps in one test":
   var
     b = populateBoard()
 
@@ -159,4 +159,61 @@ test "black knight all steps in one test":
   check(move(@[input[14], input[15]], b, White)) # WS
   check(b.board[5][0] == knight)
   check(b.board[4][2] of FreeTile)
+
+test "black knight all steps in one test":
+  var
+    b = populateBoard()
+
+  let
+    knight = b.board[0][6]
+    input = @["g8", "h6",
+              "h6", "g4",
+              "g4", "e3",
+              "e3", "c4",
+              "c4", "e3",
+              "e3", "g4",
+              "g4", "h6",
+              "h6", "g8"]
+
+  check(b.board[0][6] == knight)
+  check(move(@[input[0], input[1]], b, Black)) # NE
+  check(knight.xPos == 7)
+  check(knight.yPos == 2)
+  check(b.board[2][7] == knight)
+  check(b.board[0][6] of FreeTile)
+  check(move(@[input[2], input[3]], b, Black)) # SW
+  check(knight.xPos == 6)
+  check(knight.yPos == 4)
+  check(b.board[4][6] == knight)
+  check(b.board[0][6] of FreeTile)
+  check(move(@[input[4], input[5]], b, Black)) # WS
+  check(knight.xPos == 4)
+  check(knight.yPos == 5)
+  check(b.board[5][4] == knight)
+  check(b.board[2][7] of FreeTile)
+  check(move(@[input[6], input[7]], b, Black)) # WN
+  check(knight.xPos == 2)
+  check(knight.yPos == 4)
+  check(b.board[4][2] == knight)
+  check(b.board[5][4] of FreeTile)
+  check(move(@[input[8], input[9]], b, Black)) # ES
+  check(knight.xPos == 4)
+  check(knight.yPos == 5)
+  check(b.board[5][4] == knight)
+  check(b.board[4][5] of FreeTile)
+  check(move(@[input[10], input[11]], b, Black)) # EN
+  check(knight.xPos == 6)
+  check(knight.yPos == 4)
+  check(b.board[4][6] == knight)
+  check(b.board[5][4] of FreeTile)
+  check(move(@[input[12], input[13]], b, Black)) # NE
+  check(knight.xPos == 7)
+  check(knight.yPos == 2)
+  check(b.board[2][7] == knight)
+  check(b.board[4][6] of FreeTile)
+  check(move(@[input[14], input[15]], b, Black)) # NW
+  check(knight.xPos == 6)
+  check(knight.yPos == 0)
+  check(b.board[0][6] == knight)
+  check(b.board[2][7] of FreeTile)
 
