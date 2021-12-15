@@ -293,7 +293,73 @@ test "white rook all directions with dist=1":
   check(rook.yPos == 7)
   check(b.board[7][0] == rook)
 
+test "black king all directions without captures":
+  var
+    b = populateBoard()
+
+  let
+    king = b.board[0][4]
+    input = @["e8", "e7",
+              "e7", "d6",
+              "d6", "e5",
+              "e5", "f5",
+              "f5", "e5",
+              "e5", "d6",
+              "d6", "e7",
+              "e7", "e8"]
+
+  check(b.board[0][4] == king)
+  check(king of King)
+  check(king.xPos == 4)
+  check(king.yPos == 0)
+
+  # Remove adjacent Pieces without using 'move()' (move would distort test results)
+  b.board[1][4] = newFreeTile(None, 4, 1)
+
+  check(move(@[input[0], input[1]], b, Black))
+  check(king.xPos == 4)
+  check(king.yPos == 1)
+  check(b.board[0][4] of FreeTile)
+  check(b.board[1][4] == king)
+  check(move(@[input[2], input[3]], b, Black))
+  check(king.xPos == 3)
+  check(king.yPos == 2)
+  check(b.board[1][4] of FreeTile)
+  check(b.board[2][3] == king)
+  check(move(@[input[4], input[5]], b, Black))
+  check(king.xPos == 4)
+  check(king.yPos == 3)
+  check(b.board[2][3] of FreeTile)
+  check(b.board[3][4] == king)
+  check(move(@[input[6], input[7]], b, Black))
+  check(king.xPos == 5)
+  check(king.yPos == 3)
+  check(b.board[3][4] of FreeTile)
+  check(b.board[3][5] == king)
+  check(move(@[input[8], input[9]], b, Black))
+  check(king.xPos == 4)
+  check(king.yPos == 3)
+  check(b.board[3][5] of FreeTile)
+  check(b.board[3][4] == king)
+  check(move(@[input[10], input[11]], b, Black))
+  check(king.xPos == 3)
+  check(king.yPos == 2)
+  check(b.board[3][4] of FreeTile)
+  check(b.board[2][3] == king)
+  check(move(@[input[12], input[13]], b, Black))
+  check(king.xPos == 4)
+  check(king.yPos == 1)
+  check(b.board[2][3] of FreeTile)
+  check(b.board[1][4] == king)
+  check(move(@[input[14], input[15]], b, Black))
+  check(king.xPos == 4)
+  check(king.yPos == 0)
+  check(b.board[1][4] of FreeTile)
+  check(b.board[0][4] == king)
+
 #TODO: Test castling (incl. canCastle bool)
-  #      Test King Movement
-  #      Test Queen Movement
-  #      Test isChecked
+  #    Test King Movement
+  #    Test Queen Movement
+  #    Test isChecked
+  #    Test false move's also
+  #    Test captures
