@@ -357,6 +357,70 @@ test "black king all directions without captures":
   check(b.board[1][4] of FreeTile)
   check(b.board[0][4] == king)
 
+test "white king all directions without captures":
+  var
+    b = populateBoard()
+
+  let
+    king = b.board[7][4]
+    input = @["e1", "e2",
+              "e2", "d3",
+              "d3", "e4",
+              "e4", "f4",
+              "f4", "e4",
+              "e4", "d3",
+              "d3", "e2",
+              "e2", "e1"]
+
+  check(b.board[7][4] == king)
+  check(king of King)
+  check(king.xPos == 4)
+  check(king.yPos == 7)
+
+  # Remove adjacent Pieces without using 'move()' (move would distort test results)
+  b.board[6][4] = newFreeTile(None, 4, 6)
+
+  check(move(@[input[0], input[1]], b, White))
+  check(king.xPos == 4)
+  check(king.yPos == 6)
+  check(b.board[7][4] of FreeTile)
+  check(b.board[6][4] == king)
+  check(move(@[input[2], input[3]], b, White))
+  check(king.xPos == 3)
+  check(king.yPos == 5)
+  check(b.board[6][4] of FreeTile)
+  check(b.board[5][3] == king)
+  check(move(@[input[4], input[5]], b, White))
+  check(king.xPos == 4)
+  check(king.yPos == 4)
+  check(b.board[5][3] of FreeTile)
+  check(b.board[4][4] == king)
+  check(move(@[input[6], input[7]], b, White))
+  check(king.xPos == 5)
+  check(king.yPos == 4)
+  check(b.board[4][4] of FreeTile)
+  check(b.board[4][5] == king)
+  check(move(@[input[8], input[9]], b, White))
+  check(king.xPos == 4)
+  check(king.yPos == 4)
+  check(b.board[4][5] of FreeTile)
+  check(b.board[4][4] == king)
+  check(move(@[input[10], input[11]], b, White))
+  check(king.xPos == 3)
+  check(king.yPos == 5)
+  check(b.board[4][4] of FreeTile)
+  check(b.board[5][3] == king)
+  check(move(@[input[12], input[13]], b, White))
+  check(king.xPos == 4)
+  check(king.yPos == 6)
+  check(b.board[5][3] of FreeTile)
+  check(b.board[6][4] == king)
+  check(move(@[input[14], input[15]], b, White))
+  check(king.xPos == 4)
+  check(king.yPos == 7)
+  check(b.board[6][4] of FreeTile)
+  check(b.board[7][4] == king)
+
 #TODO: Test castling (incl. canCastle bool)
   #    Test King Movement
   #    Test Queen Movement
