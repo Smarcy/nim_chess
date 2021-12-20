@@ -1,5 +1,5 @@
 type
-  Color* = enum
+  Color* {.pure.} = enum
     White, Black, None
 
   Piece* = ref object of RootObj
@@ -9,6 +9,7 @@ type
     xPos* {.requiresinit.}: int
     yPos* {.requiresinit.}: int
 
+  FreeTile* = ref object of Piece
   Pawn* = ref object of Piece
   Bishop* = ref object of Piece
   Knight* = ref object of Piece
@@ -17,7 +18,6 @@ type
   Queen* = ref object of Piece
   King* = ref object of Piece
     canCastle*: bool
-  FreeTile* = ref object of Piece
 
 proc newPiece*(color: Color, xPos, yPos: int, symbol: char = 'X'): Piece =
   Piece(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
@@ -47,3 +47,13 @@ proc newKing*(color: Color, xPos, yPos: int, canCastle: bool = true,
 proc newFreeTile*(color: Color, xPos, yPos: int, symbol: char = ' '): FreeTile =
   FreeTile(symbol: symbol, color: color, xPos: xPos, yPos: yPos)
 
+proc `$`*(this: Piece): string =
+  ##[ Pretty Print Piece Data (+ canCastle-field if King or Rook) ]##
+  result = "S: " & this.symbol & "\nX: " & $this.xPos & "\nY: " & $this.yPos &
+      "\nC: " & $this.color
+  if this of King:
+    var k = (King)this
+    result.add("\ncanCastle: " & $k.canCastle)
+  if this of Rook:
+    var r = (Rook)this
+    result.add("\ncanCastle: " & $r.canCastle)
