@@ -44,7 +44,7 @@ proc findKing(b: Board, color: Color): King =
   for i in 0..7:
     for p in b.board[i]:
       if p of King and p.color == color:
-        echo repr(p)
+        # echo repr(p)
         return (King)p
 
 

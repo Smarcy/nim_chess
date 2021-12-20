@@ -1,4 +1,5 @@
 import strutils
+import strformat
 import os
 import model/board as b
 from model/pieces import Color
@@ -25,7 +26,7 @@ while true:
   discard os.execShellCmd("clear")
   b.draw(board)
 
-  echo "\n", currentPlayer, "'s turn"
+  echo &"\n {currentPlayer}'s turn"
 
   write(stdout, "\nType your move (ex.: \"a2 a3\") -> ")
   var input = readLine(stdin).split(" ")

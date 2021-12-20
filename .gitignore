@@ -10,3 +10,6 @@
 # ignore Session.vim
 
 Session.vim
+.gitsecret/keys/random_seed
+!*.secret
+test.txt

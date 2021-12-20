@@ -421,8 +421,35 @@ test "white king all directions without captures":
   check(b.board[6][4] of FreeTile)
   check(b.board[7][4] == king)
 
+test "white queen all directions with dist=1":
+  var
+    b = populateBoard()
+
+  let
+    queen = b.board[7][3]
+    input = @["d1", "e1",
+              "e1", "e2",
+              "e2", "d3",
+              "d3", "e4",
+              "e4", "f4",
+              "f4", "e4",
+              "e4", "d3",
+              "d3", "e2",
+              "e2", "e1",
+              "e1", "d1"]
+
+  check(b.board[7][3] == queen)
+  check(queen of Queen)
+  check(queen.xPos == 3)
+  check(queen.yPos == 7)
+
+  # Remove adjacent Pieces without using 'move()' (move would distort test results)
+  b.board[6][4] = newFreeTile(None, 4, 6)
+  b.draw
+  check(b.board[6][4] of FreeTile)
+
+
 #TODO: Test castling (incl. canCastle bool)
-  #    Test King Movement
   #    Test Queen Movement
   #    Test isChecked
   #    Test false move's also
