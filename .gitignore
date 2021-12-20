@@ -1,7 +1,7 @@
 # Ignore all
 *
 
-# Unignore all with extensions
+# Unignore all with extensions (this combo ignores binaries for example)
 !*.*
 
 # Unignore all dirs
@@ -10,6 +10,8 @@
 # ignore Session.vim
 
 Session.vim
+
 .gitsecret/keys/random_seed
 !*.secret
-test.txt
+
+devNotes.txtdev_notes.txt
