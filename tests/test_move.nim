@@ -451,6 +451,7 @@ test "white queen all directions with dist=1":
   # tries to read from nil (move() invokes isChecked())
   b.board[2][0] = newKing(White, 0, 2)
   check(b.board[6][4] of FreeTile)
+  check(b.board[7][4] of FreeTile)
 
   check(move(@[input[0], input[1]], b, White))
   check(queen.xPos == 4)
@@ -499,8 +500,91 @@ test "white queen all directions with dist=1":
   check(b.board[7][4] == queen)
 
 
+test "black queen all directions with dist=1":
+  var
+    b = populateBoard()
+
+  let
+    queen = b.board[0][3]
+    input = @["d8", "e8",
+              "e8", "e7",
+              "e7", "d6",
+              "d6", "e5",
+              "e5", "f5",
+              "f5", "e5",
+              "e5", "d6",
+              "d6", "e7",
+              "e7", "e8",
+              "e8", "d8"]
+
+  check(b.board[0][3] == queen)
+  check(queen of Queen)
+  check(queen.xPos == 3)
+  check(queen.yPos == 0)
+
+  # Remove adjacent Pieces without using 'move()' (move would distort test results)
+  b.board[1][4] = newFreeTile(None, 4, 1)
+  b.board[0][4] = newFreeTile(None, 4, 0)
+
+  # There has to be a King of each color, otherwise isChecked
+  # tries to read from nil (move() invokes isChecked())
+  b.board[2][0] = newKing(Black, 0, 2)
+  check(b.board[1][4] of FreeTile)
+  check(b.board[0][4] of FreeTile)
+
+  check(move(@[input[0], input[1]], b, Black))
+  check(queen.xPos == 4)
+  check(queen.yPos == 0)
+  check(b.board[0][3] of FreeTile)
+  check(b.board[0][4] == queen)
+  check(move(@[input[2], input[3]], b, Black))
+  check(queen.xPos == 4)
+  check(queen.yPos == 1)
+  check(b.board[0][4] of FreeTile)
+  check(b.board[1][4] == queen)
+  check(move(@[input[4], input[5]], b, Black))
+  check(queen.xPos == 3)
+  check(queen.yPos == 2)
+  check(b.board[1][4] of FreeTile)
+  check(b.board[2][3] == queen)
+  check(move(@[input[6], input[7]], b, Black))
+  check(queen.xPos == 4)
+  check(queen.yPos == 3)
+  check(b.board[2][3] of FreeTile)
+  check(b.board[3][4] == queen)
+  check(move(@[input[8], input[9]], b, Black))
+  check(queen.xPos == 5)
+  check(queen.yPos == 3)
+  check(b.board[3][4] of FreeTile)
+  check(b.board[3][5] == queen)
+  check(move(@[input[10], input[11]], b, Black))
+  check(queen.xPos == 4)
+  check(queen.yPos == 3)
+  check(b.board[3][5] of FreeTile)
+  check(b.board[3][4] == queen)
+  check(move(@[input[12], input[13]], b, Black))
+  check(queen.xPos == 3)
+  check(queen.yPos == 2)
+  check(b.board[3][4] of FreeTile)
+  check(b.board[2][3] == queen)
+  check(move(@[input[14], input[15]], b, Black))
+  check(queen.xPos == 4)
+  check(queen.yPos == 1)
+  check(b.board[2][3] of FreeTile)
+  check(b.board[1][4] == queen)
+  check(move(@[input[16], input[17]], b, Black))
+  check(queen.xPos == 4)
+  check(queen.yPos == 0)
+  check(b.board[1][4] of FreeTile)
+  check(b.board[0][4] == queen)
+  check(move(@[input[18], input[19]], b, Black))
+  check(queen.xPos == 3)
+  check(queen.yPos == 0)
+  check(b.board[0][4] of FreeTile)
+  check(b.board[0][3] == queen)
+
 #TODO: Test castling (incl. canCastle bool)
-  #    Test Queen Movement
   #    Test isChecked
-  #    Test false move's also
+  #    Test false moves
   #    Test captures
+  #    Test dist > 1 for all relevant Pieces
