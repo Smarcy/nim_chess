@@ -31,6 +31,7 @@ proc draw*(board: Board) =
       if row[i] == nil:
         continue
       if row[i].color == White:
+        discard
         stdout.styledWrite("| ", fgGreen, $row[i].symbol, fgDefault, " ")
       elif row[i].color == Black:
         stdout.styledWrite("| ", fgRed, $row[i].symbol, fgDefault, " ")
@@ -72,7 +73,7 @@ proc promotePawn(b: Board, sourcePiece: Piece, x, y: int): Piece =
     else:
       continue
 
-proc isChecked(this: King, b: Board): bool =
+proc isChecked*(this: King, b: Board): bool =
   ##[ Check if a given King is currently in check (on a given Board).]##
   let
     rookDirs = @[(1, 0), (0, 1), (-1, 0), (0, -1)]
@@ -93,8 +94,6 @@ proc isChecked(this: King, b: Board): bool =
         break
 
       if (currPiece of Rook or currPiece of Queen) and currPiece.color != this.color:
-        echo "ROOK CHECK"
-        discard stdin.readLine()
         return true
 
       currY += dir[0]

@@ -22,20 +22,23 @@ proc isValidMoveInput*(move: seq[string]): bool =
         return m[0].toLowerAscii in 'a'..'h' and m[1] in '1'..'8'
 
 ################ Game Loop ################
-while true:
-  discard os.execShellCmd("clear")
-  b.draw(board)
+proc main() =
+  while true:
+    discard os.execShellCmd("clear")
+    b.draw(board)
 
-  echo &"\n {currentPlayer}'s turn"
+    echo &"\n {currentPlayer}'s turn"
 
-  write(stdout, "\nType your move (ex.: \"a2 a3\") -> ")
-  var input = readLine(stdin).split(" ")
+    write(stdout, "\nType your move (ex.: \"a2 a3\") -> ")
+    var input = readLine(stdin).split(" ")
 
-  if isValidMoveInput(input):
-    if move(input, board, currentPlayer):
-      # Change currentPlayerColor if the given move was successful
-      currentPlayer = if currentPlayer == White: Black else: White
-      discard readLine(stdin)
-    else:
-      echo "Illegal Move!"
-      discard readLine(stdin)
+    if isValidMoveInput(input):
+      if move(input, board, currentPlayer):
+        # Change currentPlayerColor if the given move was successful
+        currentPlayer = if currentPlayer == White: Black else: White
+        discard readLine(stdin)
+      else:
+        echo "Illegal Move!"
+        discard readLine(stdin)
+
+main()

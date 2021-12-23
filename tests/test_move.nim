@@ -583,8 +583,75 @@ test "black queen all directions with dist=1":
   check(b.board[0][4] of FreeTile)
   check(b.board[0][3] == queen)
 
+test "black king gets checked by white Rook":
+  # Test Rook Check without capture
+  var
+    b = populateBoard()
+
+  var
+    blackKing = (King)b.board[0][4]
+
+    input = @["a1", "a3",
+              "a3", "e3"]
+
+  # Remove unneeded Pieces out of the way
+  b.board[6][0] = newFreeTile(None, 0, 1)
+  b.board[1][4] = newFreeTile(None, 0, 1)
+
+  check(not isChecked(blackKing, b))
+
+  check(move(@[input[0], input[1]], b, White))
+  check(move(@[input[2], input[3]], b, White))
+
+  check(isChecked(blackKing, b))
+
+  # //Test Rook Check without capture
+
+  # Test Rook Check with capture on e7
+  b = populateBoard()
+
+  blackKing = (King)b.board[0][4]
+
+  input = @["a1", "a3",
+            "a3", "e3",
+            "e3", "e7"]
+
+  b.board[6][0] = newFreeTile(None, 0, 1)
+
+  check(move(@[input[0], input[1]], b, White))
+  check(not isChecked(blackKing, b))
+  check(move(@[input[2], input[3]], b, White))
+  check(not isChecked(blackKing, b))
+  check(move(@[input[4], input[5]], b, White))
+  check(isChecked(blackKing, b))
+  # //Test Rook Check with capture on e7
+
+  # Test Rook Check with captures on d7 and d8
+  b = populateBoard()
+
+  blackKing = (King)b.board[0][4]
+
+  input = @["a1", "a3",
+            "a3", "d3",
+            "d3", "d7",
+            "d7", "d8"]
+
+  b.board[6][0] = newFreeTile(None, 0, 1)
+
+  check(move(@[input[0], input[1]], b, White))
+  check(not isChecked(blackKing, b))
+  check(move(@[input[2], input[3]], b, White))
+  check(not isChecked(blackKing, b))
+  check(move(@[input[4], input[5]], b, White))
+  check(not isChecked(blackKing, b))
+  check(move(@[input[6], input[7]], b, White))
+  check(isChecked(blackKing, b))
+  b.draw
+  # //Test Rook Check with captures on d7 and d8
+
+
 #TODO: Test castling (incl. canCastle bool)
-  #    Test isChecked
+  #    Test isChecked (thoroughly)
   #    Test false moves
   #    Test captures
   #    Test dist > 1 for all relevant Pieces
